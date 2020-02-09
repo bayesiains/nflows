@@ -12,7 +12,7 @@ Features neural likelihood-free methods from
 ## Setup
 Clone repo, then set environment variable ```LFI_PROJECT_DIR``` to local directory.  
 
-Add same directory to your ```PYTHON_PATH``` and you should be good to go in terms of paths. 
+Add src directory to your ```PYTHON_PATH``` and you should be good to go in terms of paths. 
 
 Required packages: NumPy, SciPy, Matplotlib, tqdm, PyTorch, Pyro, and TensorBoard.
 
