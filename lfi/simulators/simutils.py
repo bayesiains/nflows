@@ -123,7 +123,7 @@ def get_simulator_and_prior(task):
         )
 
     elif task == "mg1":
-        simulator = simulators.MG1Simulator(summarize_observations=True)
+        simulator = simulators.MG1Simulator()
         prior = distributions_.MG1Uniform(
             low=torch.zeros(3), high=torch.Tensor([10.0, 10.0, 1.0 / 3.0])
         )

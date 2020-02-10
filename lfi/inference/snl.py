@@ -20,7 +20,7 @@ if torch.cuda.is_available():
     device = torch.device("cuda")
     torch.set_default_tensor_type("torch.cuda.FloatTensor")
 else:
-    input("CUDA not available, do you wish to continue?")
+    #input("CUDA not available, do you wish to continue?")
     device = torch.device("cpu")
     torch.set_default_tensor_type("torch.FloatTensor")
 
