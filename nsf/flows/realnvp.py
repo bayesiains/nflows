@@ -6,7 +6,7 @@ from torch.nn import functional as F
 from nsf import distributions
 from nsf import flows
 from nsf import transforms
-from lfi.nn_ import nets
+from lfi.nn_ import nets as nn_
 
 
 class SimpleRealNVP(flows.Flow):
