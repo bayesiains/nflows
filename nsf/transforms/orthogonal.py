@@ -37,12 +37,15 @@ class HouseholderSequence(transforms.Transform):
         # these vectors are orthogonal to the hyperplanes through which we reflect
         # self.q_vectors = nets.Parameter(torch.randn(num_transforms, features))
         # self.q_vectors = nets.Parameter(torch.eye(num_transforms // 2, features))
+        import numpy as np
+
         def tile(a, dim, n_tile):
+            if a.nelement() == 0:
+                return a
             init_dim = a.size(dim)
             repeat_idx = [1] * a.dim()
             repeat_idx[dim] = n_tile
             a = a.repeat(*(repeat_idx))
-            import numpy as np
 
             order_index = torch.Tensor(
                 np.concatenate(
@@ -51,9 +54,11 @@ class HouseholderSequence(transforms.Transform):
             ).long()
             return torch.index_select(a, dim, order_index)
 
-        self.q_vectors = nn.Parameter(
-            tile(torch.eye(num_transforms // 2, features), 0, 2)
-        )
+        qv = tile(torch.eye(num_transforms // 2, features), 0, 2)
+        if np.mod(num_transforms, 2) != 0:  # odd number of transforms, including 1
+            qv = torch.cat((qv, torch.zeros(1, features)))
+            qv[-1, num_transforms // 2] = 1
+        self.q_vectors = nn.Parameter(qv)
 
     @staticmethod
     def _apply_transforms(inputs, q_vectors):

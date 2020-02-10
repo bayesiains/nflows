@@ -13,11 +13,11 @@ class ShapeTest(torchtestcase.TorchTestCase):
         hidden_features = 200
         num_blocks = 5
         output_multiplier = 3
-        conditional_features = 50
+        context_features = 50
         batch_size = 16
 
         inputs = torch.randn(batch_size, features)
-        conditional_inputs = torch.randn(batch_size, conditional_features)
+        conditional_inputs = torch.randn(batch_size, context_features)
 
         for use_residual_blocks, random_mask in [
             (False, False),
@@ -32,8 +32,7 @@ class ShapeTest(torchtestcase.TorchTestCase):
                     hidden_features=hidden_features,
                     num_blocks=num_blocks,
                     output_multiplier=output_multiplier,
-                    is_conditional=True,
-                    conditional_features=conditional_features,
+                    context_features=context_features,
                     use_residual_blocks=use_residual_blocks,
                     random_mask=random_mask,
                 )
@@ -64,7 +63,7 @@ class ShapeTest(torchtestcase.TorchTestCase):
                     hidden_features=hidden_features,
                     num_blocks=num_blocks,
                     output_multiplier=output_multiplier,
-                    is_conditional=False,
+                    context_features=None,
                     use_residual_blocks=use_residual_blocks,
                     random_mask=random_mask,
                 )
