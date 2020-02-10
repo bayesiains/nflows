@@ -10,9 +10,8 @@ Features neural likelihood-free methods from
 >Hermans et al., _Likelihood-free Inference with Amortized Approximate Likelihood Ratios_ (SRE), 2019.  [[arXiv]](https://arxiv.org/abs/1903.04057)
 
 ## Setup
-Clone repo, then set environment variable ```LFI_PROJECT_DIR``` to local directory.  
 
-Add src directory to your ```PYTHON_PATH``` and you should be good to go in terms of paths. 
+Clone repo, then set environment variable ```LFI_PROJECT_DIR``` to local directory.  
 
 Required packages: NumPy, SciPy, Matplotlib, tqdm, PyTorch, Pyro, and TensorBoard.
 

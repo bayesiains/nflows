@@ -1,0 +1,36 @@
+# create:
+# conda env create --file environment.yml
+# update:
+# conda env update --file environment.yml --prune
+name: lfi
+
+channels:
+  - conda-forge
+  - pytorch
+
+dependencies:
+  - autopep8
+  - black
+  - cudatoolkit=10.*
+  - flake8
+  - jupyter
+  - matplotlib
+  - numpy
+  - pillow
+  - pip
+  - pip:
+    - pyro-ppl>=1.2.0
+    - torchtestcase
+    - -e .  # install package in development mode
+  - pytest
+  - pytest-pep8
+  - python=3.7
+  - pytorch=1.4.*
+  - pyyaml
+  - rope
+  - scikit-learn
+  - scipy
+  - seaborn
+  - tensorboard
+  - tqdm
+ 
