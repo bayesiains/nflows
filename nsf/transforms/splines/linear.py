@@ -2,7 +2,7 @@ import torch
 from torch.nn import functional as F
 import numpy as np
 
-import lfi.utils as utils
+import sbi.utils as utils
 from nsf import transforms
 
 

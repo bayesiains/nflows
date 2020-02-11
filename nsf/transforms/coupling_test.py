@@ -3,8 +3,8 @@
 import torch
 import unittest
 
-from lfi.nn_ import nets as nn_
-import lfi.utils as utils
+from sbi.nn_ import nets as nn_
+import sbi.utils as utils
 
 from nsf.transforms import coupling
 from nsf.transforms.transform_test import TransformTest

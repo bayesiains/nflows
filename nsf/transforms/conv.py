@@ -1,4 +1,4 @@
-import lfi.utils as utils
+import sbi.utils as utils
 from nsf import transforms
 
 

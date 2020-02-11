@@ -1,5 +1,3 @@
-from .base import Flow
-
-from .autoregressive import MaskedAutoregressiveFlow
-
-from .realnvp import SimpleRealNVP
+from nsf.flows.base import Flow
+from nsf.flows.autoregressive import MaskedAutoregressiveFlow
+from nsf.flows.realnvp import SimpleRealNVP

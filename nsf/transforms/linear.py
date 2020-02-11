@@ -6,7 +6,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F, init
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 from nsf import transforms
 

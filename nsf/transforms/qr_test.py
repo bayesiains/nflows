@@ -1,7 +1,7 @@
 import torch
 import unittest
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 from nsf.transforms import qr
 from nsf.transforms.transform_test import TransformTest

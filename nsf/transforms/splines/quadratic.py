@@ -1,7 +1,7 @@
 import torch
 from torch.nn import functional as F
 
-import lfi.utils as utils
+import sbi.utils as utils
 from nsf import transforms
 
 DEFAULT_MIN_BIN_WIDTH = 1e-3

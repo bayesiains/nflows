@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-import lfi.utils as utils
+import sbi.utils as utils
 from nsf import transforms
 from nsf.transforms import made as made_module
 from nsf.transforms import splines

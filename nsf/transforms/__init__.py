@@ -1,4 +1,4 @@
-from .base import (
+from nsf.transforms.base import (
     InverseNotAvailable,
     InputOutsideDomain,
     Transform,
@@ -7,7 +7,7 @@ from .base import (
     InverseTransform,
 )
 
-from .autoregressive import (
+from nsf.transforms.autoregressive import (
     MaskedAffineAutoregressiveTransform,
     MaskedPiecewiseLinearAutoregressiveTransform,
     MaskedPiecewiseQuadraticAutoregressiveTransform,
@@ -15,12 +15,12 @@ from .autoregressive import (
     MaskedPiecewiseRationalQuadraticAutoregressiveTransform,
 )
 
-from .linear import NaiveLinear
-from .lu import LULinear
-from .qr import QRLinear
-from .svd import SVDLinear
+from nsf.transforms.linear import NaiveLinear
+from nsf.transforms.lu import LULinear
+from nsf.transforms.qr import QRLinear
+from nsf.transforms.svd import SVDLinear
 
-from .nonlinearities import (
+from nsf.transforms.nonlinearities import (
     CompositeCDFTransform,
     GatedLinearUnit,
     LeakyReLU,
@@ -34,15 +34,15 @@ from .nonlinearities import (
     Tanh,
 )
 
-from .normalization import BatchNorm, ActNorm
+from nsf.transforms.normalization import BatchNorm, ActNorm
 
-from .orthogonal import HouseholderSequence
+from nsf.transforms.orthogonal import HouseholderSequence
 
-from .permutations import Permutation
-from .permutations import RandomPermutation
-from .permutations import ReversePermutation
+from nsf.transforms.permutations import Permutation
+from nsf.transforms.permutations import RandomPermutation
+from nsf.transforms.permutations import ReversePermutation
 
-from .coupling import (
+from nsf.transforms.coupling import (
     AffineCouplingTransform,
     AdditiveCouplingTransform,
     PiecewiseLinearCouplingTransform,
@@ -51,7 +51,11 @@ from .coupling import (
     PiecewiseRationalQuadraticCouplingTransform,
 )
 
-from .standard import IdentityTransform, AffineScalarTransform, AffineTransform
+from nsf.transforms.standard import (
+    IdentityTransform,
+    AffineScalarTransform,
+    AffineTransform,
+)
 
-from .reshape import SqueezeTransform
-from .conv import OneByOneConvolution
+from nsf.transforms.reshape import SqueezeTransform
+from nsf.transforms.conv import OneByOneConvolution

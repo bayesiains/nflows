@@ -5,7 +5,7 @@ import unittest
 
 from unittest.mock import MagicMock
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 from nsf.transforms import linear
 from nsf.transforms.transform_test import TransformTest

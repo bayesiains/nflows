@@ -6,7 +6,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 from nsf import transforms
 from nsf.transforms import splines

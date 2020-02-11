@@ -1,6 +1,6 @@
 """Basic definitions for the flows module."""
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 from nsf import distributions
 

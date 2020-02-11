@@ -7,7 +7,7 @@ from torch.nn import functional as F
 
 from nsf import distributions as distributions_
 
-from lfi.nn_.nde import MixtureOfGaussiansMADE
+from sbi.nn_.nde import MixtureOfGaussiansMADE
 
 
 class MADEMoG(distributions_.Distribution):

@@ -5,7 +5,7 @@ import torch
 
 from torch import nn
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 
 class InverseNotAvailable(Exception):

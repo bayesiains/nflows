@@ -3,7 +3,7 @@
 import numpy as np
 import torch
 
-import lfi.utils as utils
+import sbi.utils as utils
 
 from torch import nn
 
