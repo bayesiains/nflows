@@ -7,7 +7,7 @@ setup(
     version=__version__,
     description="",
     url="https://github.com/mackelab/pyknos",
-    author="Conor Durkan",
+    author="Conor Durkan, George Papamakarios, Artur Bekasov",
     packages=find_packages(exclude=["sbi", "tests"]),
     license="GPLv3",
     test_requires=["pytest", "deepdiff", "torchtestcase"],
