@@ -1,0 +1,46 @@
+sudo: required
+dist: xenial
+services:
+  - xvfb
+language: python
+matrix:
+  include:
+    - python: 3.7
+notifications:
+  email: false
+addons:
+  apt_packages:
+    - pandoc
+install:
+  #- sudo apt-get install libopenblas-dev
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
+  #- conda create -q -f environment.yml -n testenv
+  #- conda update python=$TRAVIS_PYTHON_VERSION
+  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION autopep8 black flake8 jupyter numpy scipy pillow pyyaml pytest pytest-pep8 rope scikit-learn scipy seaborn tensorboard tqdm
+  - source activate testenv
+  - conda install pytorch=1.4.* cudatoolkit=10.* -c pytorch
+  - export PATH=$HOME/.local/bin:$PATH
+  - pip install coverage==4.5.4 python-coveralls pytest-cov torchtestcase pyro-ppl>=1.2.0
+  #- pip install pep8 pytest-pep8 python-coveralls pytest-cov==2.5.0 torchtestcase pyro-ppl>=1.2.0
+  #- pip install mkdocs-material markdown-include
+  #- pip install nbconvert
+  #- pip install mknotebooks
+  - pip install -e .
+  #- pip install -r requirements.txt
+  #- python setup.py install
+  #- eval $(ssh-agent -s)
+script:
+  - PYTHONPATH=$PWD:$PYTHONPATH travis_wait 30 pytest --cov=lfi
+after_success:
+  - coveralls
+  #- git config user.name "jan-matthis"
+  #- git config user.email "mail@jan-matthis.de"
+  #- git remote add gh-token "https://${GH_TOKEN}@github.com/mackelab/delfi.git";
+  #- git fetch gh-token && git fetch gh-token gh-pages:gh-pages;
+  #- cd docs && mkdocs gh-deploy -v --clean --remote-name gh-token;

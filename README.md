@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mackelab/lfi.svg?branch=master)](https://travis-ci.org/mackelab/lfi)
+
 ## Description
 Code for "On Contrastive Learning for Likelihood-free Inference".
 
