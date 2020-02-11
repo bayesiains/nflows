@@ -15,7 +15,7 @@ Features neural likelihood-free methods from
 
 Clone repo, then set environment variable ```LFI_PROJECT_DIR``` to local directory.  
 
-You can install all the dependencies using the `environment.yaml` file to create a conda environment: `conda env create -f environment.yaml' 
+You can install all the dependencies using the `environment.yaml` file to create a conda environment: `conda env create -f environment.yaml`
 
 Alternatively, you can install via `setup.py` using `pip install -e.`
 
