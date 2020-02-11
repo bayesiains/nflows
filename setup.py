@@ -1,14 +1,14 @@
 from setuptools import find_packages, setup
 
-exec(open("sbi/version.py").read())
+exec(open("pyknos/version.py").read())
 
 setup(
-    name="sbi",
+    name="pyknos",
     version=__version__,
-    description="Simulation-based inference",
-    url="https://github.com/mackelab/sbi",
+    description="",
+    url="https://github.com/mackelab/pyknos",
     author="Conor Durkan",
-    packages=find_packages(exclude=["tests"]),
+    packages=find_packages(exclude=["sbi", "tests"]),
     license="GPLv3",
     test_requires=["pytest", "deepdiff", "torchtestcase"],
     install_requires=[

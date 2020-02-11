@@ -1,30 +1,22 @@
-[![Build Status](https://travis-ci.org/mackelab/sbi.svg?branch=master)](https://travis-ci.org/mackelab/sbi)
+[![Build Status](https://travis-ci.org/mackelab/pyknos.svg?branch=master)](https://travis-ci.org/mackelab/pyknos)
 
 
 
 ## Description
-Building on code for "On Contrastive Learning for Likelihood-free Inference" in https://github.com/conormdurkan/lfi . 
+Building on code for "On Contrastive Learning for Likelihood-free Inference" in https://github.com/conormdurkan/lfi, the relevant part is mostly from https://github.com/bayesiains/nsf.
 
-Features neural likelihood-free methods from
-
-> Papamakarios et al., _Sequential Neural Likelihood_ (SNL), 2019. [[arXiv]](https://arxiv.org/abs/1805.07226)
->Greenberg et al., _Automatic Posterior Transformation_ (SNPE-C), 2019. [[arXiv]](https://arxiv.org/abs/1905.07488)
->Hermans et al., _Likelihood-free Inference with Amortized Approximate Likelihood Ratios_ (SRE), 2019.  [[arXiv]](https://arxiv.org/abs/1903.04057)
+Features two families of neural conditional density estimators: normalizing flows and mixture-density networks. 
 
 ## Setup
 
-Clone repo, then set environment variable ```LFI_PROJECT_DIR``` to local directory.  
-
-You can install all the dependencies using the `environment.yaml` file to create a conda environment: `conda env create -f environment.yaml`
+You can install all the dependencies using the `environment.yml` file to create a conda environment: `conda env create -f environment.yml`
 
 Alternatively, you can install via `setup.py` using `pip install -e.`
-
-Also uses https://github.com/bayesiains/nsf for general density estimation, but that directory is included here so you don't need to get it separately (will hopefully be a pip installable package soon, and in PyTorch master some day).  
 
 ## Examples
 
 Examples are collected in notebooks in `examples/`. 
 
-## Git lfs
+## Git LFS
 
 We use git lfs to store binary files, e.g., example notebooks. To use git lfs follow installation instructions here https://git-lfs.github.com/. 
