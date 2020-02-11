@@ -582,7 +582,7 @@ class APT:
         self._summary["epochs"].append(epochs)
         self._summary["best-validation-log-probs"].append(best_validation_log_prob)
 
-    def _estimate_acceptance_rate(self, num_samples=int(1e7), true_observation=None):
+    def _estimate_acceptance_rate(self, num_samples=int(1e5), true_observation=None):
         """
         Estimates rejection sampling acceptance rates.
 

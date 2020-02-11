@@ -112,3 +112,9 @@ class LinearGaussianSimulator(Simulator):
     @property
     def parameter_plotting_limits(self):
         return [-4, 4]
+
+    @property
+    def normalization_parameters(self):
+        mean = torch.zeros(self._dim)
+        std = torch.ones(self._dim)
+        return mean, std
