@@ -4,7 +4,7 @@ import sbi.simulators as simulators
 
 from torch import distributions
 
-from nsf import distributions as distributions_
+from pyknos import distributions as distributions_
 
 
 def simulation_wrapper(simulator, parameter_sample_fn, num_samples):
