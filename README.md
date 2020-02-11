@@ -1,8 +1,9 @@
-[![Build Status](https://travis-ci.org/mackelab/lfi.svg?branch=master)](https://travis-ci.org/mackelab/lfi)
+[![Build Status](https://travis-ci.org/mackelab/sbi.svg?branch=master)](https://travis-ci.org/mackelab/sbi)
+
+
 
 ## Description
-
-Code for "On Contrastive Learning for Likelihood-free Inference".
+Building on code for "On Contrastive Learning for Likelihood-free Inference" in https://github.com/conormdurkan/lfi . 
 
 Features neural likelihood-free methods from
 
