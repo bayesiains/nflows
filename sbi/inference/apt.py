@@ -3,7 +3,7 @@ import os
 import torch
 
 import sbi.simulators as simulators
-import sbi.utils as utils
+import pyknos.utils as utils
 
 from copy import deepcopy
 from pyro.infer.mcmc import HMC, NUTS

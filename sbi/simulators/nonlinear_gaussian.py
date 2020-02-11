@@ -3,7 +3,7 @@ import scipy.stats
 import os
 import torch
 
-import sbi.utils as utils
+import pyknos.utils as utils
 
 from matplotlib import pyplot as plt
 

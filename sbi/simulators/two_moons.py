@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-import sbi.utils as utils
+import pyknos.utils as utils
 
 from matplotlib import pyplot as plt
 

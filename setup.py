@@ -7,10 +7,9 @@ setup(
     version=__version__,
     description="",
     url="https://github.com/mackelab/pyknos",
-    author="Conor Durkan",
+    author="Conor Durkan, George Papamakarios, Artur Bekasov",
     packages=find_packages(exclude=["sbi", "tests"]),
     license="GPLv3",
-    test_requires=["pytest", "deepdiff", "torchtestcase"],
     install_requires=[
         "matplotlib",
         "numpy",
@@ -20,6 +19,17 @@ setup(
         "torch",
         "tqdm",
     ],
-    extras_requires={"dev": ["autoflake", "black", "flake8", "isort", "pytest"]},
+    extras_requires={
+        "dev": [
+            "autoflake",
+            "black",
+            "deepdiff",
+            "flake8",
+            "isort",
+            "pytest",
+            "pyyaml",
+            "torchtestcase",
+        ],
+    },
     dependency_links=[],
 )

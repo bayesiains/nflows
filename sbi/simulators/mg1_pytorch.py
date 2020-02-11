@@ -3,7 +3,7 @@ import os
 import pickle
 import torch
 
-import sbi.utils as utils
+import pyknos.utils as utils
 
 from sbi.simulators.simulator import Simulator
 from summarizers import MG1Summarizer

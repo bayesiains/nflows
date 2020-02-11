@@ -36,7 +36,7 @@ install:
   #- python setup.py install
   #- eval $(ssh-agent -s)
 script:
-  - PYTHONPATH=$PWD:$PYTHONPATH travis_wait 30 pytest --cov=sbi
+  - PYTHONPATH=$PWD:$PYTHONPATH travis_wait 30 pytest --cov=pyknos
 after_success:
   - coveralls
   #- git config user.name "jan-matthis"
