@@ -2,7 +2,7 @@
 # conda env create --file environment.yml
 # update:
 # conda env update --file environment.yml --prune
-name: lfi
+name: sbi
 
 channels:
   - conda-forge
@@ -10,22 +10,24 @@ channels:
 
 dependencies:
   - autopep8
+  - autoflake
   - black
-  - cudatoolkit=10.*
+  - cudatoolkit
   - flake8
+  - isort
   - jupyter
   - matplotlib
   - numpy
   - pillow
   - pip
   - pip:
-    - pyro-ppl>=1.2.0
+    - pyro-ppl
     - torchtestcase
     - -e .  # install package in development mode
   - pytest
   - pytest-pep8
-  - python=3.7
-  - pytorch=1.4.*
+  - python
+  - pytorch
   - pyyaml
   - rope
   - scikit-learn

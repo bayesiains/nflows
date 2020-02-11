@@ -1,12 +1,12 @@
 from setuptools import find_packages, setup
 
-exec(open("lfi/version.py").read())
+exec(open("sbi/version.py").read())
 
 setup(
-    name="lfi",
+    name="sbi",
     version=__version__,
-    description="LFI + CDE.",
-    url="https://github.com/mackelab/lfi",
+    description="Simulation-based inference",
+    url="https://github.com/mackelab/sbi",
     author="Conor Durkan",
     packages=find_packages(exclude=["tests"]),
     license="GPLv3",
