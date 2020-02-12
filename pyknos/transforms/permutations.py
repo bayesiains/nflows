@@ -1,18 +1,18 @@
 """Implementations of permutation-like transforms."""
 
 import torch
-import pyknos.utils as utils
+import pyknos.utils.typechecks as check
 
-from pyknos import transforms
+from pyknos.transforms.base import Transform
 
 
-class Permutation(transforms.Transform):
+class Permutation(Transform):
     """Permutes inputs on a given dimension using a given permutation."""
 
     def __init__(self, permutation, dim=1):
         if permutation.ndimension() != 1:
             raise ValueError("Permutation must be a 1D tensor.")
-        if not utils.is_positive_int(dim):
+        if not check.is_positive_int(dim):
             raise ValueError("dim must be a positive integer.")
 
         super().__init__()
@@ -49,7 +49,7 @@ class RandomPermutation(Permutation):
     """Permutes using a random, but fixed, permutation. Only works with 1D inputs."""
 
     def __init__(self, features, dim=1):
-        if not utils.is_positive_int(features):
+        if not check.is_positive_int(features):
             raise ValueError("Number of features must be a positive integer.")
         super().__init__(torch.randperm(features), dim)
 
@@ -58,6 +58,6 @@ class ReversePermutation(Permutation):
     """Reverses the elements of the input. Only works with 1D inputs."""
 
     def __init__(self, features, dim=1):
-        if not utils.is_positive_int(features):
+        if not check.is_positive_int(features):
             raise ValueError("Number of features must be a positive integer.")
         super().__init__(torch.arange(features - 1, -1, -1), dim)

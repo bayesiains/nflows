@@ -185,8 +185,8 @@ class MultivariateGaussianMDN(nn.Module):
 
         # We need (batch_size * num_samples) samples in total.
         means, precision_factors = (
-            utils.repeat_rows(means, num_samples),
-            utils.repeat_rows(precision_factors, num_samples),
+            torchutils.repeat_rows(means, num_samples),
+            torchutils.repeat_rows(precision_factors, num_samples),
         )
 
         # Normalize the logits for the coefficients.
@@ -200,7 +200,7 @@ class MultivariateGaussianMDN(nn.Module):
         )  # [batch_size, num_samples]
 
         # Create dummy index for indexing means and precision factors.
-        ix = utils.repeat_rows(torch.arange(batch_size), num_samples)
+        ix = torchutils.repeat_rows(torch.arange(batch_size), num_samples)
 
         # Select means and precision factors.
         chosen_means = means[ix, choices, :]

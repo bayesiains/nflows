@@ -3,10 +3,66 @@ from torch.nn import functional as F
 
 from pyknos.nn import nets
 
-from pyknos import distributions as distributions_, flows, transforms
+from pyknos.distributions.mixture import MADEMoG
+from pyknos.distributions.normal import StandardNormal
+from pyknos.flows.base import Flow
+from pyknos.transforms.base import Transform, CompositeTransform, AffineTransform
 from pyknos.nn.nde import MixtureOfGaussiansMADE, MultivariateGaussianMDN
 
 from pyknos.utils.torchutils import create_alternating_binary_mask
+
+from pyknos.transforms.autoregressive import (
+    MaskedAffineAutoregressiveTransform,
+    MaskedPiecewiseLinearAutoregressiveTransform,
+    MaskedPiecewiseQuadraticAutoregressiveTransform,
+    MaskedPiecewiseCubicAutoregressiveTransform,
+    MaskedPiecewiseRationalQuadraticAutoregressiveTransform,
+)
+
+from pyknos.transforms.linear import NaiveLinear
+from pyknos.transforms.lu import LULinear
+from pyknos.transforms.qr import QRLinear
+from pyknos.transforms.svd import SVDLinear
+
+from pyknos.transforms.nonlinearities import (
+    CompositeCDFTransform,
+    GatedLinearUnit,
+    LeakyReLU,
+    Logit,
+    LogTanh,
+    PiecewiseLinearCDF,
+    PiecewiseQuadraticCDF,
+    PiecewiseCubicCDF,
+    PiecewiseRationalQuadraticCDF,
+    Sigmoid,
+    Tanh,
+)
+
+from pyknos.transforms.normalization import BatchNorm, ActNorm
+
+from pyknos.transforms.orthogonal import HouseholderSequence
+
+from pyknos.transforms.permutations import Permutation
+from pyknos.transforms.permutations import RandomPermutation
+from pyknos.transforms.permutations import ReversePermutation
+
+from pyknos.transforms.coupling import (
+    AffineCouplingTransform,
+    AdditiveCouplingTransform,
+    PiecewiseLinearCouplingTransform,
+    PiecewiseQuadraticCouplingTransform,
+    PiecewiseCubicCouplingTransform,
+    PiecewiseRationalQuadraticCouplingTransform,
+)
+
+from pyknos.transforms.standard import (
+    IdentityTransform,
+    AffineScalarTransform,
+    AffineTransform,
+)
+
+from pyknos.transforms.reshape import SqueezeTransform
+from pyknos.transforms.conv import OneByOneConvolution
 
 
 def get_neural_posterior(model, parameter_dim, observation_dim, simulator):
@@ -14,7 +70,7 @@ def get_neural_posterior(model, parameter_dim, observation_dim, simulator):
     # Everything is a flow because we need to normalize parameters based on prior.
 
     mean, std = simulator.normalization_parameters
-    normalizing_transform = transforms.AffineTransform(shift=-mean / std, scale=1 / std)
+    normalizing_transform = AffineTransform(shift=-mean / std, scale=1 / std)
 
     if model == "mdn":
         hidden_features = 50
@@ -38,7 +94,7 @@ def get_neural_posterior(model, parameter_dim, observation_dim, simulator):
     elif model == "made":
         num_mixture_components = 5
         transform = normalizing_transform
-        distribution = distributions_.MADEMoG(
+        distribution = MADEMoG(
             features=parameter_dim,
             hidden_features=50,
             context_features=observation_dim,
@@ -51,12 +107,12 @@ def get_neural_posterior(model, parameter_dim, observation_dim, simulator):
             use_batch_norm=False,
             custom_initialization=True,
         )
-        neural_posterior = flows.Flow(transform, distribution)
+        neural_posterior = Flow(transform, distribution)
 
     elif model == "maf":
-        transform = transforms.CompositeTransform(
+        transform = CompositeTransform(
             [
-                transforms.CompositeTransform(
+                CompositeTransform(
                     [
                         transforms.MaskedAffineAutoregressiveTransform(
                             features=parameter_dim,
@@ -76,15 +132,15 @@ def get_neural_posterior(model, parameter_dim, observation_dim, simulator):
             ]
         )
 
-        transform = transforms.CompositeTransform([normalizing_transform, transform,])
+        transform = CompositeTransform([normalizing_transform, transform,])
 
-        distribution = distributions_.StandardNormal((parameter_dim,))
-        neural_posterior = flows.Flow(transform, distribution)
+        distribution = StandardNormal((parameter_dim,))
+        neural_posterior = Flow(transform, distribution)
 
     elif model == "nsf":
-        transform = transforms.CompositeTransform(
+        transform = CompositeTransform(
             [
-                transforms.CompositeTransform(
+                CompositeTransform(
                     [
                         transforms.PiecewiseRationalQuadraticCouplingTransform(
                             mask=create_alternating_binary_mask(
@@ -112,8 +168,8 @@ def get_neural_posterior(model, parameter_dim, observation_dim, simulator):
             ]
         )
 
-        distribution = distributions_.StandardNormal((parameter_dim,))
-        neural_posterior = flows.Flow(transform, distribution)
+        distribution = StandardNormal((parameter_dim,))
+        neural_posterior = Flow(transform, distribution)
 
     else:
         raise ValueError
@@ -196,11 +252,11 @@ def get_neural_likelihood(model, parameter_dim, observation_dim):
         )
 
     elif model == "maf":
-        transform = transforms.CompositeTransform(
+        transform = CompositeTransform(
             [
-                transforms.CompositeTransform(
+                CompositeTransform(
                     [
-                        transforms.MaskedAffineAutoregressiveTransform(
+                        MaskedAffineAutoregressiveTransform(
                             features=observation_dim,
                             hidden_features=50,
                             context_features=parameter_dim,
@@ -211,21 +267,21 @@ def get_neural_likelihood(model, parameter_dim, observation_dim):
                             dropout_probability=0.0,
                             use_batch_norm=True,
                         ),
-                        transforms.RandomPermutation(features=observation_dim),
+                        RandomPermutation(features=observation_dim),
                     ]
                 )
                 for _ in range(5)
             ]
         )
-        distribution = distributions_.StandardNormal((observation_dim,))
-        neural_likelihood = flows.Flow(transform, distribution)
+        distribution = StandardNormal((observation_dim,))
+        neural_likelihood = Flow(transform, distribution)
 
     elif model == "nsf":
-        transform = transforms.CompositeTransform(
+        transform = CompositeTransform(
             [
-                transforms.CompositeTransform(
+                CompositeTransform(
                     [
-                        transforms.PiecewiseRationalQuadraticCouplingTransform(
+                        PiecewiseRationalQuadraticCouplingTransform(
                             mask=create_alternating_binary_mask(
                                 features=observation_dim, even=(i % 2 == 0)
                             ),
@@ -244,14 +300,14 @@ def get_neural_likelihood(model, parameter_dim, observation_dim):
                             tail_bound=3.0,
                             apply_unconditional_transform=False,
                         ),
-                        transforms.LULinear(observation_dim, identity_init=True),
+                        LULinear(observation_dim, identity_init=True),
                     ]
                 )
                 for i in range(5)
             ]
         )
-        distribution = distributions_.StandardNormal((observation_dim,))
-        neural_likelihood = flows.Flow(transform, distribution)
+        distribution = StandardNormal((observation_dim,))
+        neural_likelihood = Flow(transform, distribution)
 
     else:
         raise ValueError

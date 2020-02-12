@@ -5,12 +5,12 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import pyknos.utils as utils
+import pyknos.utils.typechecks as check
 
-from pyknos import transforms
+from pyknos.transforms.base import Transform, InverseNotAvailable
 
 
-# class BatchNorm(transforms.Transform):
+# class BatchNorm(Transform):
 #     """Transform that performs batch normalization.
 #
 #     Limitations:
@@ -19,7 +19,7 @@ from pyknos import transforms
 #     """
 #
 #     def __init__(self, features, eps=1e-5, momentum=0.1, affine=True):
-#         if not utils.is_positive_int(features):
+#         if not check.is_positive_int(features):
 #             raise TypeError('Number of features must be a positive integer.')
 #         super().__init__()
 #
@@ -51,7 +51,7 @@ from pyknos import transforms
 #
 #     def inverse(self, inputs):
 #         if self.training:
-#             raise transforms.InverseNotAvailable(
+#             raise InverseNotAvailable(
 #                 'Batch norm inverse is only available in eval mode, not in training mode.')
 #         if inputs.dim() != 2:
 #             raise ValueError('Expected 2-dim inputs, got inputs of shape: {}'.format(inputs.shape))
@@ -72,7 +72,7 @@ from pyknos import transforms
 #         return outputs, logabsdet
 
 
-class BatchNorm(transforms.Transform):
+class BatchNorm(Transform):
     """Transform that performs batch normalization.
 
     Limitations:
@@ -81,7 +81,7 @@ class BatchNorm(transforms.Transform):
     """
 
     def __init__(self, features, eps=1e-5, momentum=0.1, affine=True):
-        if not utils.is_positive_int(features):
+        if not check.is_positive_int(features):
             raise TypeError("Number of features must be a positive integer.")
         super().__init__()
 
@@ -122,7 +122,7 @@ class BatchNorm(transforms.Transform):
 
     def inverse(self, inputs, context=None):
         if self.training:
-            raise transforms.InverseNotAvailable(
+            raise InverseNotAvailable(
                 "Batch norm inverse is only available in eval mode, not in training mode."
             )
         if inputs.dim() != 2:
@@ -144,7 +144,7 @@ class BatchNorm(transforms.Transform):
         return outputs, logabsdet
 
 
-class ActNorm(transforms.Transform):
+class ActNorm(Transform):
     def __init__(self, features):
         """
         Transform that performs activation normalization. Works for 2D and 4D inputs. For 4D
@@ -153,7 +153,7 @@ class ActNorm(transforms.Transform):
         Reference:
         > D. Kingma et. al., Glow: Generative flow with invertible 1x1 convolutions, NeurIPS 2018.
         """
-        if not utils.is_positive_int(features):
+        if not check.is_positive_int(features):
             raise TypeError("Number of features must be a positive integer.")
         super().__init__()
 

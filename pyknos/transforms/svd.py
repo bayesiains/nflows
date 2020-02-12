@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F, init
 
-from pyknos import transforms
+from pyknos.transforms.orthogonal import HouseholderSequence
 from pyknos.transforms.linear import Linear
 
 
@@ -21,7 +21,7 @@ class SVDLinear(Linear):
         # minimum value for diagonal
         self.eps = eps
         # First orthogonal matrix (U).
-        self.orthogonal_1 = transforms.HouseholderSequence(
+        self.orthogonal_1 = HouseholderSequence(
             features=features, num_transforms=num_householder
         )
 
@@ -29,7 +29,7 @@ class SVDLinear(Linear):
         self.unconstrained_diagonal = nn.Parameter(torch.zeros(features))
 
         # Second orthogonal matrix (V^T).
-        self.orthogonal_2 = transforms.HouseholderSequence(
+        self.orthogonal_2 = HouseholderSequence(
             features=features, num_transforms=num_householder
         )
 

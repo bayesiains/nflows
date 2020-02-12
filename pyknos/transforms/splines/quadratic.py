@@ -1,8 +1,8 @@
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils as utils
-from pyknos import transforms
+import pyknos.utils.torchutils as torchutils
+from pyknos.transforms.base import InputOutsideDomain
 
 DEFAULT_MIN_BIN_WIDTH = 1e-3
 DEFAULT_MIN_BIN_HEIGHT = 1e-3
@@ -64,7 +64,7 @@ def quadratic_spline(
     min_bin_height=DEFAULT_MIN_BIN_HEIGHT,
 ):
     if torch.min(inputs) < left or torch.max(inputs) > right:
-        raise transforms.InputOutsideDomain()
+        raise InputOutsideDomain()
 
     if inverse:
         inputs = (inputs - bottom) / (top - bottom)
@@ -118,9 +118,9 @@ def quadratic_spline(
     bin_locations = F.pad(bin_locations, pad=(1, 0), mode="constant", value=0.0)
 
     if inverse:
-        bin_idx = utils.searchsorted(bin_left_cdf, inputs)[..., None]
+        bin_idx = torchutils.searchsorted(bin_left_cdf, inputs)[..., None]
     else:
-        bin_idx = utils.searchsorted(bin_locations, inputs)[..., None]
+        bin_idx = torchutils.searchsorted(bin_locations, inputs)[..., None]
 
     input_bin_locations = bin_locations.gather(-1, bin_idx)[..., 0]
     input_bin_widths = widths.gather(-1, bin_idx)[..., 0]

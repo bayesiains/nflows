@@ -4,13 +4,23 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils as utils
-from pyknos import transforms
-from pyknos.transforms import made as made_module
-from pyknos.transforms import splines
+import pyknos.utils.torchutils as torchutils
+from pyknos.transforms.base import Transform
+import pyknos.transforms.made as made_module
+from pyknos.transforms.splines.linear import linear_spline, unconstrained_linear_spline
+from pyknos.transforms.splines.quadratic import (
+    quadratic_spline,
+    unconstrained_quadratic_spline,
+)
+from pyknos.transforms.splines.cubic import cubic_spline, unconstrained_cubic_spline
+import pyknos.transforms.splines.rational_quadratic as rational_quadratic
+from pyknos.transforms.splines.rational_quadratic import (
+    rational_quadratic_spline,
+    unconstrained_rational_quadratic_spline,
+)
 
 
-class AutoregressiveTransform(transforms.Transform):
+class AutoregressiveTransform(Transform):
     """Transforms each input variable with an invertible elementwise transformation.
 
     The parameters of each invertible elementwise transformation can be functions of previous input
@@ -90,7 +100,7 @@ class MaskedAffineAutoregressiveTransform(AutoregressiveTransform):
         scale = F.softplus(unconstrained_scale) + self._epsilon
         log_scale = torch.log(scale)
         outputs = scale * inputs + shift
-        logabsdet = utils.sum_except_batch(log_scale, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(log_scale, num_batch_dims=1)
         return outputs, logabsdet
 
     def _elementwise_inverse(self, inputs, autoregressive_params):
@@ -101,7 +111,7 @@ class MaskedAffineAutoregressiveTransform(AutoregressiveTransform):
         scale = F.softplus(unconstrained_scale) + self._epsilon
         log_scale = torch.log(scale)
         outputs = (inputs - shift) / scale
-        logabsdet = -utils.sum_except_batch(log_scale, num_batch_dims=1)
+        logabsdet = -torchutils.sum_except_batch(log_scale, num_batch_dims=1)
         return outputs, logabsdet
 
     def _unconstrained_scale_and_shift(self, autoregressive_params):
@@ -157,11 +167,11 @@ class MaskedPiecewiseLinearAutoregressiveTransform(AutoregressiveTransform):
             batch_size, self.features, self._output_dim_multiplier()
         )
 
-        outputs, logabsdet = splines.linear_spline(
+        outputs, logabsdet = linear_spline(
             inputs=inputs, unnormalized_pdf=unnormalized_pdf, inverse=inverse
         )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def _elementwise_forward(self, inputs, autoregressive_params):
         return self._elementwise(inputs, autoregressive_params)
@@ -185,9 +195,9 @@ class MaskedPiecewiseQuadraticAutoregressiveTransform(AutoregressiveTransform):
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
-        min_bin_width=splines.rational_quadratic.DEFAULT_MIN_BIN_WIDTH,
-        min_bin_height=splines.rational_quadratic.DEFAULT_MIN_BIN_HEIGHT,
-        min_derivative=splines.rational_quadratic.DEFAULT_MIN_DERIVATIVE,
+        min_bin_width=rational_quadratic.DEFAULT_MIN_BIN_WIDTH,
+        min_bin_height=rational_quadratic.DEFAULT_MIN_BIN_HEIGHT,
+        min_derivative=rational_quadratic.DEFAULT_MIN_DERIVATIVE,
     ):
         self.num_bins = num_bins
         self.min_bin_width = min_bin_width
@@ -231,10 +241,10 @@ class MaskedPiecewiseQuadraticAutoregressiveTransform(AutoregressiveTransform):
             # unnormalized_heights /= np.sqrt(self.autoregressive_net.hidden_features)
 
         if self.tails is None:
-            spline_fn = splines.quadratic_spline
+            spline_fn = quadratic_spline
             spline_kwargs = {}
         elif self.tails == "linear":
-            spline_fn = splines.unconstrained_quadratic_spline
+            spline_fn = unconstrained_quadratic_spline
             spline_kwargs = {"tails": self.tails, "tail_bound": self.tail_bound}
         else:
             raise ValueError
@@ -249,7 +259,7 @@ class MaskedPiecewiseQuadraticAutoregressiveTransform(AutoregressiveTransform):
             **spline_kwargs
         )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def _elementwise_forward(self, inputs, autoregressive_params):
         return self._elementwise(inputs, autoregressive_params)
@@ -308,7 +318,7 @@ class MaskedPiecewiseCubicAutoregressiveTransform(AutoregressiveTransform):
             unnormalized_widths /= np.sqrt(self.autoregressive_net.hidden_features)
             unnormalized_heights /= np.sqrt(self.autoregressive_net.hidden_features)
 
-        outputs, logabsdet = splines.cubic_spline(
+        outputs, logabsdet = cubic_spline(
             inputs=inputs,
             unnormalized_widths=unnormalized_widths,
             unnormalized_heights=unnormalized_heights,
@@ -316,7 +326,7 @@ class MaskedPiecewiseCubicAutoregressiveTransform(AutoregressiveTransform):
             unnorm_derivatives_right=unnorm_derivatives_right,
             inverse=inverse,
         )
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def _elementwise_forward(self, inputs, autoregressive_params):
         return self._elementwise(inputs, autoregressive_params)
@@ -340,9 +350,9 @@ class MaskedPiecewiseRationalQuadraticAutoregressiveTransform(AutoregressiveTran
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
-        min_bin_width=splines.rational_quadratic.DEFAULT_MIN_BIN_WIDTH,
-        min_bin_height=splines.rational_quadratic.DEFAULT_MIN_BIN_HEIGHT,
-        min_derivative=splines.rational_quadratic.DEFAULT_MIN_DERIVATIVE,
+        min_bin_width=rational_quadratic.DEFAULT_MIN_BIN_WIDTH,
+        min_bin_height=rational_quadratic.DEFAULT_MIN_BIN_HEIGHT,
+        min_derivative=rational_quadratic.DEFAULT_MIN_DERIVATIVE,
     ):
         self.num_bins = num_bins
         self.min_bin_width = min_bin_width
@@ -390,10 +400,10 @@ class MaskedPiecewiseRationalQuadraticAutoregressiveTransform(AutoregressiveTran
             unnormalized_heights /= np.sqrt(self.autoregressive_net.hidden_features)
 
         if self.tails is None:
-            spline_fn = splines.rational_quadratic_spline
+            spline_fn = rational_quadratic_spline
             spline_kwargs = {}
         elif self.tails == "linear":
-            spline_fn = splines.unconstrained_rational_quadratic_spline
+            spline_fn = unconstrained_rational_quadratic_spline
             spline_kwargs = {"tails": self.tails, "tail_bound": self.tail_bound}
         else:
             raise ValueError
@@ -410,7 +420,7 @@ class MaskedPiecewiseRationalQuadraticAutoregressiveTransform(AutoregressiveTran
             **spline_kwargs
         )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def _elementwise_forward(self, inputs, autoregressive_params):
         return self._elementwise(inputs, autoregressive_params)

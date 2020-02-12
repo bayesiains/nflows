@@ -3,14 +3,14 @@
 import numpy as np
 import torch
 
-import pyknos.utils as utils
+import pyknos.utils.torchutils as torchutils
 
 from torch import nn
 
-from pyknos import distributions as distributions_
+from pyknos.distributions.base import Distribution
 
 
-class StandardNormal(distributions_.Distribution):
+class StandardNormal(Distribution):
     """A multivariate Normal with zero mean and unit covariance."""
 
     def __init__(self, shape):
@@ -26,7 +26,7 @@ class StandardNormal(distributions_.Distribution):
                     self._shape, inputs.shape[1:]
                 )
             )
-        neg_energy = -0.5 * utils.sum_except_batch(inputs ** 2, num_batch_dims=1)
+        neg_energy = -0.5 * torchutils.sum_except_batch(inputs ** 2, num_batch_dims=1)
         return neg_energy - self._log_z
 
     def _sample(self, num_samples, context):
@@ -36,7 +36,7 @@ class StandardNormal(distributions_.Distribution):
             # The value of the context is ignored, only its size is taken into account.
             context_size = context.shape[0]
             samples = torch.randn(context_size * num_samples, *self._shape)
-            return utils.split_leading_dim(samples, [context_size, num_samples])
+            return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
     def _mean(self, context):
         if context is None:
@@ -46,7 +46,7 @@ class StandardNormal(distributions_.Distribution):
             return torch.zeros(context.shape[0], *self._shape)
 
 
-class ConditionalDiagonalNormal(distributions_.Distribution):
+class ConditionalDiagonalNormal(Distribution):
     """A diagonal multivariate Normal whose parameters are functions of a context."""
 
     def __init__(self, shape, context_encoder=None):
@@ -99,8 +99,10 @@ class ConditionalDiagonalNormal(distributions_.Distribution):
 
         # Compute log prob.
         norm_inputs = (inputs - means) * torch.exp(-log_stds)
-        log_prob = -0.5 * utils.sum_except_batch(norm_inputs ** 2, num_batch_dims=1)
-        log_prob -= utils.sum_except_batch(log_stds, num_batch_dims=1)
+        log_prob = -0.5 * torchutils.sum_except_batch(
+            norm_inputs ** 2, num_batch_dims=1
+        )
+        log_prob -= torchutils.sum_except_batch(log_stds, num_batch_dims=1)
         log_prob -= self._log_z
         return log_prob
 
@@ -108,21 +110,21 @@ class ConditionalDiagonalNormal(distributions_.Distribution):
         # Compute parameters.
         means, log_stds = self._compute_params(context)
         stds = torch.exp(log_stds)
-        means = utils.repeat_rows(means, num_samples)
-        stds = utils.repeat_rows(stds, num_samples)
+        means = torchutils.repeat_rows(means, num_samples)
+        stds = torchutils.repeat_rows(stds, num_samples)
 
         # Generate samples.
         context_size = context.shape[0]
         noise = torch.randn(context_size * num_samples, *self._shape)
         samples = means + stds * noise
-        return utils.split_leading_dim(samples, [context_size, num_samples])
+        return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
     def _mean(self, context):
         means, _ = self._compute_params(context)
         return means
 
 
-class DiagonalNormal(distributions_.Distribution):
+class DiagonalNormal(Distribution):
     """A diagonal multivariate Normal whose parameters are functions of a context."""
 
     def __init__(self, shape):
@@ -176,8 +178,10 @@ class DiagonalNormal(distributions_.Distribution):
 
         # Compute log prob.
         norm_inputs = (inputs - means) * torch.exp(-log_stds)
-        log_prob = -0.5 * utils.sum_except_batch(norm_inputs ** 2, num_batch_dims=1)
-        log_prob -= utils.sum_except_batch(log_stds, num_batch_dims=1)
+        log_prob = -0.5 * torchutils.sum_except_batch(
+            norm_inputs ** 2, num_batch_dims=1
+        )
+        log_prob -= torchutils.sum_except_batch(log_stds, num_batch_dims=1)
         log_prob -= self._log_z
         return log_prob
 
@@ -185,14 +189,14 @@ class DiagonalNormal(distributions_.Distribution):
         # Compute parameters.
         means, log_stds = self._compute_params(context)
         stds = torch.exp(log_stds)
-        means = utils.repeat_rows(means, num_samples)
-        stds = utils.repeat_rows(stds, num_samples)
+        means = torchutils.repeat_rows(means, num_samples)
+        stds = torchutils.repeat_rows(stds, num_samples)
 
         # Generate samples.
         context_size = context.shape[0]
         noise = torch.randn(context_size * num_samples, *self._shape)
         samples = means + stds * noise
-        return utils.split_leading_dim(samples, [context_size, num_samples])
+        return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
     def _mean(self, context):
         return self.mean

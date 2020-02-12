@@ -355,7 +355,7 @@ class MixtureOfGaussiansMADE(MADE):
     def sample(self, num_samples, context=None):
 
         if context is not None:
-            context = utils.repeat_rows(context, num_samples)
+            context = torchutils.repeat_rows(context, num_samples)
 
         with torch.no_grad():
 

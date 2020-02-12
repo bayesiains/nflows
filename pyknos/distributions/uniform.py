@@ -4,12 +4,12 @@ import torch
 from matplotlib import pyplot as plt
 from torch import distributions
 
-import pyknos.utils as utils
+import pyknos.utils.plot as plot
 
 
 class TweakedUniform(distributions.Uniform):
     def log_prob(self, value, context):
-        return utils.sum_except_batch(super().log_prob(value))
+        return torchutils.sum_except_batch(super().log_prob(value))
         # result = super().log_prob(value)
         # if len(result.shape) == 2 and result.shape[1] == 1:
         #     return result.reshape(-1)
@@ -91,7 +91,7 @@ def _test():
     # print(prior.log_prob(x))
     d = LotkaVolterraOscillating()
     samples = d.sample((1000,))
-    utils.plot_hist_marginals(utils.tensor2numpy(samples), lims=[-6, 3])
+    plot.plot_hist_marginals(utils.tensor2numpy(samples), lims=[-6, 3])
     plt.show()
     # w, x, y, z = np.meshgrid(
     #     np.linspace(-5, 2, 100),

@@ -2,12 +2,13 @@ import torch
 import unittest
 
 from tests.transforms.transform_test import TransformTest
-from pyknos import transforms
+from pyknos.transforms.reshape import SqueezeTransform
+import pyknos.utils.typechecks as check
 
 
 class SqueezeTransformTest(TransformTest):
     def setUp(self):
-        self.transform = transforms.SqueezeTransform()
+        self.transform = SqueezeTransform()
 
     def test_forward(self):
         batch_size = 10

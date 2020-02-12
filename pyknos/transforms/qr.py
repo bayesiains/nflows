@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F, init
 
-from pyknos import transforms
+from pyknos.transforms.orthogonal import HouseholderSequence
 from pyknos.transforms.linear import Linear
 
 
@@ -22,7 +22,7 @@ class QRLinear(Linear):
         self.log_upper_diag = nn.Parameter(torch.zeros(features))
 
         # Parameterization for Q
-        self.orthogonal = transforms.HouseholderSequence(
+        self.orthogonal = HouseholderSequence(
             features=features, num_transforms=num_householder
         )
 

@@ -3,7 +3,7 @@
 import torch
 import unittest
 
-import pyknos.utils as utils
+import pyknos.utils.torchutils as torchutils
 
 from pyknos.transforms import lu
 from tests.transforms.transform_test import TransformTest
@@ -17,7 +17,7 @@ class LULinearTest(TransformTest):
         lower, upper = self.transform._create_lower_upper()
         self.weight = lower @ upper
         self.weight_inverse = torch.inverse(self.weight)
-        self.logabsdet = utils.logabsdet(self.weight)
+        self.logabsdet = torchutils.logabsdet(self.weight)
 
         self.eps = 1e-5
 

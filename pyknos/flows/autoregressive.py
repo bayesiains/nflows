@@ -2,12 +2,18 @@
 
 from torch.nn import functional as F
 
-from pyknos import distributions
-from pyknos import flows
-from pyknos import transforms
+from pyknos.distributions.normal import StandardNormal
+from pyknos.flows.base import Flow
+from pyknos.transforms.base import CompositeTransform
+from pyknos.transforms.permutations import (
+    RandomPermutation,
+    ReversePermutation,
+)
+from pyknos.transforms.autoregressive import MaskedAffineAutoregressiveTransform
+from pyknos.transforms.normalization import BatchNorm
 
 
-class MaskedAutoregressiveFlow(flows.Flow):
+class MaskedAutoregressiveFlow(Flow):
     """An autoregressive flow that uses affine transforms with masking.
 
     Reference:
@@ -31,15 +37,15 @@ class MaskedAutoregressiveFlow(flows.Flow):
     ):
 
         if use_random_permutations:
-            permutation_constructor = transforms.RandomPermutation
+            permutation_constructor = RandomPermutation
         else:
-            permutation_constructor = transforms.ReversePermutation
+            permutation_constructor = ReversePermutation
 
         layers = []
         for _ in range(num_layers):
             layers.append(permutation_constructor(features))
             layers.append(
-                transforms.MaskedAffineAutoregressiveTransform(
+                MaskedAffineAutoregressiveTransform(
                     features=features,
                     hidden_features=hidden_features,
                     num_blocks=num_blocks_per_layer,
@@ -51,9 +57,9 @@ class MaskedAutoregressiveFlow(flows.Flow):
                 )
             )
             if batch_norm_between_layers:
-                layers.append(transforms.BatchNorm(features))
+                layers.append(BatchNorm(features))
 
         super().__init__(
-            transform=transforms.CompositeTransform(layers),
-            distribution=distributions.StandardNormal([features]),
+            transform=CompositeTransform(layers),
+            distribution=StandardNormal([features]),
         )

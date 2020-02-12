@@ -1,10 +1,11 @@
 import torch
 
-import pyknos.utils as utils
-from pyknos import transforms
+import pyknos.utils.torchutils as torchutils
+import pyknos.utils.typechecks as check
+from pyknos.transforms.base import Transform
 
 
-class SqueezeTransform(transforms.Transform):
+class SqueezeTransform(Transform):
     """A transformation defined for image data that trades spatial dimensions for channel
     dimensions, i.e. "squeezes" the inputs along the channel dimensions.
 
@@ -18,7 +19,7 @@ class SqueezeTransform(transforms.Transform):
     def __init__(self, factor=2):
         super(SqueezeTransform, self).__init__()
 
-        if not utils.is_int(factor) or factor <= 1:
+        if not check.is_int(factor) or factor <= 1:
             raise ValueError("Factor must be an integer > 1.")
 
         self.factor = factor

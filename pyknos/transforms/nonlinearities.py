@@ -6,29 +6,34 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import pyknos.utils as utils
+import pyknos.utils.torchutils as torchutils
 
-from pyknos import transforms
+from pyknos.transforms.base import (
+    Transform,
+    InverseTransform,
+    CompositeTransform,
+    InputOutsideDomain,
+)
 from pyknos.transforms import splines
 
 
-class Tanh(transforms.Transform):
+class Tanh(Transform):
     def forward(self, inputs, context=None):
         outputs = torch.tanh(inputs)
         logabsdet = torch.log(1 - outputs ** 2)
-        logabsdet = utils.sum_except_batch(logabsdet, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(logabsdet, num_batch_dims=1)
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
         if torch.min(inputs) <= -1 or torch.max(inputs) >= 1:
-            raise transforms.InputOutsideDomain()
+            raise InputOutsideDomain()
         outputs = 0.5 * torch.log((1 + inputs) / (1 - inputs))
         logabsdet = -torch.log(1 - inputs ** 2)
-        logabsdet = utils.sum_except_batch(logabsdet, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(logabsdet, num_batch_dims=1)
         return outputs, logabsdet
 
 
-class LogTanh(transforms.Transform):
+class LogTanh(Transform):
     """Tanh with unbounded output. Constructed by selecting a cut_point, and replacing values to
     the right of cut_point with alpha * log(beta * x), and to the left of -cut_point with
     -alpha * log(-beta * x). alpha and beta are set to match the value and the first derivative of
@@ -61,7 +66,7 @@ class LogTanh(transforms.Transform):
         logabsdet[mask_middle] = torch.log(1 - outputs[mask_middle] ** 2)
         logabsdet[mask_right] = torch.log(self.alpha / inputs[mask_right])
         logabsdet[mask_left] = torch.log(-self.alpha / inputs[mask_left])
-        logabsdet = utils.sum_except_batch(logabsdet, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(logabsdet, num_batch_dims=1)
 
         return outputs, logabsdet
 
@@ -86,12 +91,12 @@ class LogTanh(transforms.Transform):
         logabsdet[mask_left] = (
             -np.log(self.alpha * self.beta) - inputs[mask_left] / self.alpha
         )
-        logabsdet = utils.sum_except_batch(logabsdet, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(logabsdet, num_batch_dims=1)
 
         return outputs, logabsdet
 
 
-class LeakyReLU(transforms.Transform):
+class LeakyReLU(Transform):
     def __init__(self, negative_slope=1e-2):
         if negative_slope <= 0:
             raise ValueError("Slope must be positive.")
@@ -103,18 +108,18 @@ class LeakyReLU(transforms.Transform):
         outputs = F.leaky_relu(inputs, negative_slope=self.negative_slope)
         mask = (inputs < 0).type(torch.Tensor)
         logabsdet = self.log_negative_slope * mask
-        logabsdet = utils.sum_except_batch(logabsdet, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(logabsdet, num_batch_dims=1)
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
         outputs = F.leaky_relu(inputs, negative_slope=(1 / self.negative_slope))
         mask = (inputs < 0).type(torch.Tensor)
         logabsdet = -self.log_negative_slope * mask
-        logabsdet = utils.sum_except_batch(logabsdet, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(logabsdet, num_batch_dims=1)
         return outputs, logabsdet
 
 
-class Sigmoid(transforms.Transform):
+class Sigmoid(Transform):
     def __init__(self, temperature=1, eps=1e-6, learn_temperature=False):
         super().__init__()
         self.eps = eps
@@ -126,19 +131,19 @@ class Sigmoid(transforms.Transform):
     def forward(self, inputs, context=None):
         inputs = self.temperature * inputs
         outputs = torch.sigmoid(inputs)
-        logabsdet = utils.sum_except_batch(
+        logabsdet = torchutils.sum_except_batch(
             torch.log(self.temperature) - F.softplus(-inputs) - F.softplus(inputs)
         )
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
         if torch.min(inputs) < 0 or torch.max(inputs) > 1:
-            raise transforms.InputOutsideDomain()
+            raise InputOutsideDomain()
 
         inputs = torch.clamp(inputs, self.eps, 1 - self.eps)
 
         outputs = (1 / self.temperature) * (torch.log(inputs) - torch.log1p(-inputs))
-        logabsdet = -utils.sum_except_batch(
+        logabsdet = -torchutils.sum_except_batch(
             torch.log(self.temperature)
             - F.softplus(-self.temperature * outputs)
             - F.softplus(self.temperature * outputs)
@@ -146,12 +151,12 @@ class Sigmoid(transforms.Transform):
         return outputs, logabsdet
 
 
-class Logit(transforms.InverseTransform):
+class Logit(InverseTransform):
     def __init__(self, temperature=1, eps=1e-6):
         super().__init__(Sigmoid(temperature=temperature, eps=eps))
 
 
-class GatedLinearUnit(transforms.Transform):
+class GatedLinearUnit(Transform):
     def __init__(self):
         super().__init__()
 
@@ -166,39 +171,37 @@ class GatedLinearUnit(transforms.Transform):
         return inputs / gate, -torch.log(gate).reshape(-1)
 
 
-class CauchyCDF(transforms.Transform):
+class CauchyCDF(Transform):
     def __init__(self, location=None, scale=None, features=None):
         super().__init__()
 
     def forward(self, inputs, context=None):
         outputs = (1 / np.pi) * torch.atan(inputs) + 0.5
-        logabsdet = utils.sum_except_batch(-np.log(np.pi) - torch.log(1 + inputs ** 2))
+        logabsdet = torchutils.sum_except_batch(
+            -np.log(np.pi) - torch.log(1 + inputs ** 2)
+        )
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
         if torch.min(inputs) < 0 or torch.max(inputs) > 1:
-            raise transforms.InputOutsideDomain()
+            raise InputOutsideDomain()
 
         outputs = torch.tan(np.pi * (inputs - 0.5))
-        logabsdet = -utils.sum_except_batch(
+        logabsdet = -torchutils.sum_except_batch(
             -np.log(np.pi) - torch.log(1 + outputs ** 2)
         )
         return outputs, logabsdet
 
 
-class CauchyCDFInverse(transforms.InverseTransform):
+class CauchyCDFInverse(InverseTransform):
     def __init__(self, location=None, scale=None, features=None):
         super().__init__(CauchyCDF(location=location, scale=scale, features=features))
 
 
-class CompositeCDFTransform(transforms.CompositeTransform):
+class CompositeCDFTransform(CompositeTransform):
     def __init__(self, squashing_transform, cdf_transform):
         super().__init__(
-            [
-                squashing_transform,
-                cdf_transform,
-                transforms.InverseTransform(squashing_transform),
-            ]
+            [squashing_transform, cdf_transform, InverseTransform(squashing_transform),]
         )
 
 
@@ -206,7 +209,7 @@ def _share_across_batch(params, batch_size):
     return params[None, ...].expand(batch_size, *params.shape)
 
 
-class PiecewiseLinearCDF(transforms.Transform):
+class PiecewiseLinearCDF(Transform):
     def __init__(self, shape, num_bins=10, tails=None, tail_bound=1.0):
         super().__init__()
 
@@ -233,7 +236,7 @@ class PiecewiseLinearCDF(transforms.Transform):
                 tail_bound=self.tail_bound,
             )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def forward(self, inputs, context=None):
         return self._spline(inputs, inverse=False)
@@ -242,7 +245,7 @@ class PiecewiseLinearCDF(transforms.Transform):
         return self._spline(inputs, inverse=True)
 
 
-class PiecewiseQuadraticCDF(transforms.Transform):
+class PiecewiseQuadraticCDF(Transform):
     def __init__(
         self,
         shape,
@@ -289,7 +292,7 @@ class PiecewiseQuadraticCDF(transforms.Transform):
             **spline_kwargs
         )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def forward(self, inputs, context=None):
         return self._spline(inputs, inverse=False)
@@ -298,7 +301,7 @@ class PiecewiseQuadraticCDF(transforms.Transform):
         return self._spline(inputs, inverse=True)
 
 
-class PiecewiseCubicCDF(transforms.Transform):
+class PiecewiseCubicCDF(Transform):
     def __init__(
         self,
         shape,
@@ -353,7 +356,7 @@ class PiecewiseCubicCDF(transforms.Transform):
             **spline_kwargs
         )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def forward(self, inputs, context=None):
         return self._spline(inputs, inverse=False)
@@ -362,7 +365,7 @@ class PiecewiseCubicCDF(transforms.Transform):
         return self._spline(inputs, inverse=True)
 
 
-class PiecewiseRationalQuadraticCDF(transforms.Transform):
+class PiecewiseRationalQuadraticCDF(Transform):
     def __init__(
         self,
         shape,
@@ -437,7 +440,7 @@ class PiecewiseRationalQuadraticCDF(transforms.Transform):
             **spline_kwargs
         )
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def forward(self, inputs, context=None):
         return self._spline(inputs, inverse=False)

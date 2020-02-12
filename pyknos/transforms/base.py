@@ -5,7 +5,7 @@ import torch
 
 from torch import nn
 
-import pyknos.utils as utils
+import pyknos.utils.typechecks as check
 
 
 class InverseNotAvailable(Exception):
@@ -80,7 +80,7 @@ class MultiscaleCompositeTransform(Transform):
             num_transforms: int, total number of transforms to be added.
             split_dim: dimension along which to split.
         """
-        if not utils.is_positive_int(split_dim):
+        if not check.is_positive_int(split_dim):
             raise TypeError("Split dimension must be a positive integer.")
 
         super().__init__()

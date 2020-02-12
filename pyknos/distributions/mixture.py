@@ -5,12 +5,11 @@ from torch import distributions
 from torch import nn
 from torch.nn import functional as F
 
-from pyknos import distributions as distributions_
-
+from pyknos.distributions.base import Distribution
 from pyknos.nn.nde import MixtureOfGaussiansMADE
 
 
-class MADEMoG(distributions_.Distribution):
+class MADEMoG(Distribution):
     def __init__(
         self,
         features,

@@ -3,7 +3,7 @@
 
 import torch
 
-import pyknos.utils as utils
+import pyknos.utils.torchutils as torchutils
 
 from torch import nn
 from torch.nn import functional as F, init
@@ -44,7 +44,7 @@ class MaskedLinear(nn.Linear):
         cls, in_degrees, out_features, autoregressive_features, random_mask, is_output
     ):
         if is_output:
-            out_degrees = utils.tile(
+            out_degrees = torchutils.tile(
                 _get_input_degrees(autoregressive_features),
                 out_features // autoregressive_features,
             )

@@ -5,7 +5,7 @@ import unittest
 
 from unittest.mock import MagicMock
 
-import pyknos.utils as utils
+import pyknos.utils.torchutils as torchutils
 
 from pyknos.transforms import linear
 from pyknos.transforms.linear import Linear
@@ -196,7 +196,7 @@ class NaiveLinearTest(TransformTest):
 
         self.weight = self.transform._weight
         self.weight_inverse = torch.inverse(self.weight)
-        self.logabsdet = utils.logabsdet(self.weight)
+        self.logabsdet = torchutils.logabsdet(self.weight)
 
         self.eps = 1e-5
 

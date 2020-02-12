@@ -2,8 +2,8 @@ import torch
 from torch.nn import functional as F
 import numpy as np
 
-import pyknos.utils as utils
-from pyknos import transforms
+import pyknos.utils.torchutils as torchutils
+from pyknos.transforms.base import InputOutsideDomain
 
 
 def unconstrained_linear_spline(
@@ -42,7 +42,7 @@ def linear_spline(
     > Müller et al., Neural Importance Sampling, arXiv:1808.03856, 2018.
     """
     if torch.min(inputs) < left or torch.max(inputs) > right:
-        raise transforms.InputOutsideDomain()
+        raise InputOutsideDomain()
 
     if inverse:
         inputs = (inputs - bottom) / (top - bottom)
@@ -58,7 +58,7 @@ def linear_spline(
     cdf = F.pad(cdf, pad=(1, 0), mode="constant", value=0.0)
 
     if inverse:
-        inv_bin_idx = utils.searchsorted(cdf, inputs)
+        inv_bin_idx = torchutils.searchsorted(cdf, inputs)
 
         bin_boundaries = (
             torch.linspace(0, 1, num_bins + 1)

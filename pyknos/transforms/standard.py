@@ -1,10 +1,10 @@
 """Implementations of some standard transforms."""
 
 import torch
-from pyknos import transforms
+from pyknos.transforms.base import Transform
 
 
-class IdentityTransform(transforms.Transform):
+class IdentityTransform(Transform):
     """Transform that leaves input unchanged."""
 
     def forward(self, inputs, context=None):
@@ -16,7 +16,7 @@ class IdentityTransform(transforms.Transform):
         return self(inputs, context)
 
 
-class AffineScalarTransform(transforms.Transform):
+class AffineScalarTransform(Transform):
     """Computes X = X * scale + shift, where scale and shift are scalars, and scale is non-zero."""
 
     def __init__(self, shift=None, scale=None):
@@ -53,7 +53,7 @@ class AffineScalarTransform(transforms.Transform):
         return outputs, logabsdet
 
 
-class AffineTransform(transforms.Transform):
+class AffineTransform(Transform):
     def __init__(self, shift=None, scale=None):
         super().__init__()
 

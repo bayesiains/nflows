@@ -1,16 +1,16 @@
 import torch
 import unittest
 
-import pyknos.utils as utils
+from pyknos.utils import torchutils
 
-from pyknos.transforms import svd
+from pyknos.transforms.svd import SVDLinear
 from tests.transforms.transform_test import TransformTest
 
 
 class SVDLinearTest(TransformTest):
     def setUp(self):
         self.features = 3
-        self.transform = svd.SVDLinear(features=self.features, num_householder=4)
+        self.transform = SVDLinear(features=self.features, num_householder=4)
         self.transform.bias.data = torch.randn(
             self.features
         )  # Just so bias isn't zero.
@@ -20,7 +20,7 @@ class SVDLinearTest(TransformTest):
         orthogonal_2 = self.transform.orthogonal_2.matrix()
         self.weight = orthogonal_1 @ diagonal @ orthogonal_2
         self.weight_inverse = torch.inverse(self.weight)
-        self.logabsdet = utils.logabsdet(self.weight)
+        self.logabsdet = torchutils.logabsdet(self.weight)
 
         self.eps = 1e-5
 

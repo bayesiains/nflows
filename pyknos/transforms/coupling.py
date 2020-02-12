@@ -5,13 +5,20 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils as utils
+import pyknos.utils.torchutils as torchutils
 
-from pyknos import transforms
+from pyknos.transforms.base import Transform
+
 from pyknos.transforms import splines
+from pyknos.transforms.nonlinearities import (
+    PiecewiseLinearCDF,
+    PiecewiseQuadraticCDF,
+    PiecewiseCubicCDF,
+    PiecewiseRationalQuadraticCDF,
+)
 
 
-class CouplingTransform(transforms.Transform):
+class CouplingTransform(Transform):
     """A base class for coupling layers. Supports 2D inputs (NxD), as well as 4D inputs for
     images (NxCxHxW). For images the splitting is done on the channel dimension, using the
     provided 1D mask."""
@@ -157,14 +164,14 @@ class AffineCouplingTransform(CouplingTransform):
         scale, shift = self._scale_and_shift(transform_params)
         log_scale = torch.log(scale)
         outputs = inputs * scale + shift
-        logabsdet = utils.sum_except_batch(log_scale, num_batch_dims=1)
+        logabsdet = torchutils.sum_except_batch(log_scale, num_batch_dims=1)
         return outputs, logabsdet
 
     def _coupling_transform_inverse(self, inputs, transform_params):
         scale, shift = self._scale_and_shift(transform_params)
         log_scale = torch.log(scale)
         outputs = (inputs - shift) / scale
-        logabsdet = -utils.sum_except_batch(log_scale, num_batch_dims=1)
+        logabsdet = -torchutils.sum_except_batch(log_scale, num_batch_dims=1)
         return outputs, logabsdet
 
 
@@ -206,7 +213,7 @@ class PiecewiseCouplingTransform(CouplingTransform):
 
         outputs, logabsdet = self._piecewise_cdf(inputs, transform_params, inverse)
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def _piecewise_cdf(self, inputs, transform_params, inverse=False):
         raise NotImplementedError()
@@ -233,7 +240,7 @@ class PiecewiseLinearCouplingTransform(PiecewiseCouplingTransform):
         self.tail_bound = tail_bound
 
         if apply_unconditional_transform:
-            unconditional_transform = lambda features: transforms.PiecewiseLinearCDF(
+            unconditional_transform = lambda features: PiecewiseLinearCDF(
                 shape=[features] + (img_shape if img_shape else []),
                 num_bins=num_bins,
                 tails=tails,
@@ -293,7 +300,7 @@ class PiecewiseQuadraticCouplingTransform(PiecewiseCouplingTransform):
         self.min_bin_height = min_bin_height
 
         if apply_unconditional_transform:
-            unconditional_transform = lambda features: transforms.PiecewiseQuadraticCDF(
+            unconditional_transform = lambda features: PiecewiseQuadraticCDF(
                 shape=[features] + (img_shape if img_shape else []),
                 num_bins=num_bins,
                 tails=tails,
@@ -363,7 +370,7 @@ class PiecewiseCubicCouplingTransform(PiecewiseCouplingTransform):
         self.tail_bound = tail_bound
 
         if apply_unconditional_transform:
-            unconditional_transform = lambda features: transforms.PiecewiseCubicCDF(
+            unconditional_transform = lambda features: PiecewiseCubicCDF(
                 shape=[features] + (img_shape if img_shape else []),
                 num_bins=num_bins,
                 tails=tails,
@@ -438,7 +445,7 @@ class PiecewiseRationalQuadraticCouplingTransform(PiecewiseCouplingTransform):
         self.tail_bound = tail_bound
 
         if apply_unconditional_transform:
-            unconditional_transform = lambda features: transforms.PiecewiseRationalQuadraticCDF(
+            unconditional_transform = lambda features: PiecewiseRationalQuadraticCDF(
                 shape=[features] + (img_shape if img_shape else []),
                 num_bins=num_bins,
                 tails=tails,

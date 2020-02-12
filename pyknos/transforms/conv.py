@@ -1,8 +1,10 @@
-import pyknos.utils as utils
-from pyknos import transforms
+from pyknos.transforms.lu import LULinear
+from pyknos.transforms.permutations import RandomPermutation
+
+from pyknos.utils import torchutils
 
 
-class OneByOneConvolution(transforms.LULinear):
+class OneByOneConvolution(LULinear):
     """An invertible 1x1 convolution with a fixed permutation, as introduced in the Glow paper.
 
     Reference:
@@ -11,7 +13,7 @@ class OneByOneConvolution(transforms.LULinear):
 
     def __init__(self, num_channels, using_cache=False, identity_init=True):
         super().__init__(num_channels, using_cache, identity_init)
-        self.permutation = transforms.RandomPermutation(num_channels, dim=1)
+        self.permutation = RandomPermutation(num_channels, dim=1)
 
     def _lu_forward_inverse(self, inputs, inverse=False):
         b, c, h, w = inputs.shape
@@ -25,7 +27,7 @@ class OneByOneConvolution(transforms.LULinear):
         outputs = outputs.reshape(b, h, w, c).permute(0, 3, 1, 2)
         logabsdet = logabsdet.reshape(b, h, w)
 
-        return outputs, utils.sum_except_batch(logabsdet)
+        return outputs, torchutils.sum_except_batch(logabsdet)
 
     def forward(self, inputs, context=None):
         if inputs.dim() != 4:
