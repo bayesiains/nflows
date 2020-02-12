@@ -4,7 +4,9 @@
 ## Description
 Building on code for "On Contrastive Learning for Likelihood-free Inference" in https://github.com/conormdurkan/lfi, the relevant part is mostly from https://github.com/bayesiains/nsf.
 
-Features two families of neural conditional density estimators: normalizing flows and mixture-density networks. 
+A toolbox for conditional density estimation in python/pytorch, currently featuring 
+two families of neural conditional density estimators: normalizing flows and mixture-density networks. 
+
 
 ## Setup
 
@@ -21,5 +23,5 @@ Examples are collected in notebooks in `examples/`.
 We use git lfs to store binary files, e.g., example notebooks. To use git lfs follow installation instructions here https://git-lfs.github.com/. 
 
 ## Acknowledgements
-This code builds heavily on previous work by [Conor Durkan](https://conormdurkan.github.io/), [George Papamakarios](https://gpapamak.github.io/) and [Artur Bekasov](https://arturbekasov.github.io/).
-Relevant repositories include [bayesiains/nsf](https://github.com/bayesiains/nsf) and [conormdurkan/lfi](https://github.com/conormdurkan/lfi). 
+This code builds heavily on previous work by [Conor Durkan](https://conormdurkan.github.io/), [George Papamakarios](https://gpapamak.github.io/) and [Artur Bekasov](https://arturbekasov.github.io/), and in particular on their 
+repositories include [bayesiains/nsf](https://github.com/bayesiains/nsf) and [conormdurkan/lfi](https://github.com/conormdurkan/lfi). 
