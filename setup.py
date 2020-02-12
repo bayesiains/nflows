@@ -8,7 +8,7 @@ setup(
     description="",
     url="https://github.com/mackelab/pyknos",
     author="Conor Durkan, George Papamakarios, Artur Bekasov",
-    packages=find_packages(exclude=["sbi", "tests"]),
+    packages=find_packages(exclude=["tests"]),
     license="GPLv3",
     install_requires=[
         "matplotlib",
