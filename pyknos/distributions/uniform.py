@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from torch import distributions
 
 import pyknos.utils.plot as plot
+from pyknos.utils import torchutils
 
 
 class TweakedUniform(distributions.Uniform):

@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import pyknos.utils as utils
+from pyknos.utils import torchutils
 
 
 class MultivariateGaussianMDN(nn.Module):
