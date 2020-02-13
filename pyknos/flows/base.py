@@ -2,7 +2,7 @@
 
 from pyknos.distributions.base import Distribution
 from pyknos.utils import torchutils
-import torch.nn as nn
+import torch.nn
 
 class Flow(Distribution):
     """Base class for all flow objects."""
@@ -21,13 +21,13 @@ class Flow(Distribution):
         self._transform = transform
         self._distribution = distribution
         if embedding_net is not None:
-            assert isinstance(embedding_net, nn.Module), 'embedding_net is not a nn.Module. ' \
+            assert isinstance(embedding_net, torch.nn.Module), 'embedding_net is not a nn.Module. ' \
                                                          'If you want to use hard-coded summary features, ' \
                                                          'please simply pass the encoded features and pass ' \
                                                          'embedding_net=None'
             self._embedding_net = embedding_net
         else:
-            self._embedding_net = nn.Identity()
+            self._embedding_net = torch.nn.Identity()
 
     def _log_prob(self, inputs, context):
         embedded_context = self._embedding_net(context)
