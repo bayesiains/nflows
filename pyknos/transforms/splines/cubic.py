@@ -3,8 +3,8 @@ import math
 import torch
 from torch.nn import functional as F
 
-from pyknos.utils import torchutils
 from pyknos.transforms.base import InputOutsideDomain
+from pyknos.utils import torchutils
 
 DEFAULT_MIN_BIN_WIDTH = 1e-3
 DEFAULT_MIN_BIN_HEIGHT = 1e-3

@@ -1,14 +1,11 @@
 """Implementation of normalization-based transforms."""
 import numpy as np
 import torch
-
 from torch import nn
 from torch.nn import functional as F
 
 import pyknos.utils.typechecks as check
-
-from pyknos.transforms.base import Transform, InverseNotAvailable
-
+from pyknos.transforms.base import InverseNotAvailable, Transform
 
 # class BatchNorm(Transform):
 #     """Transform that performs batch normalization.

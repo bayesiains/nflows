@@ -1,11 +1,13 @@
 """Tests for the basic flow definitions."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
-from pyknos.transforms.standard import AffineScalarTransform
+
 from pyknos.distributions.normal import StandardNormal
 from pyknos.flows import base
+from pyknos.transforms.standard import AffineScalarTransform
 
 
 class FlowTest(torchtestcase.TorchTestCase):

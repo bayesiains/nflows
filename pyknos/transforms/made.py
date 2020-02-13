@@ -2,11 +2,11 @@
 # TODO: should be moved to module nets.
 
 import torch
+from torch import nn
+from torch.nn import functional as F
+from torch.nn import init
 
 from pyknos.utils import torchutils
-
-from torch import nn
-from torch.nn import functional as F, init
 
 
 def _get_input_degrees(in_features):

@@ -1,7 +1,8 @@
 """Tests for the autoregressive transforms."""
 
-import torch
 import unittest
+
+import torch
 
 from pyknos.transforms import autoregressive
 from tests.transforms.transform_test import TransformTest

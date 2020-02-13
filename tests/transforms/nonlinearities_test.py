@@ -1,12 +1,13 @@
 """Tests for the invertible non-linearities."""
 
-import torch
 import unittest
 
+import torch
+
 import pyknos.transforms.splines.quadratic
-from pyknos.transforms.base import InputOutsideDomain
 from pyknos.transforms import nonlinearities as nl
 from pyknos.transforms import standard
+from pyknos.transforms.base import InputOutsideDomain
 from tests.transforms.transform_test import TransformTest
 
 

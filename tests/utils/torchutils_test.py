@@ -1,8 +1,9 @@
 """Tests for the PyTorch utility functions."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
 
 from pyknos.utils import torchutils
 

@@ -1,11 +1,11 @@
 """Tests for the LU linear transforms."""
 
-import torch
 import unittest
 
-from pyknos.utils import torchutils
+import torch
 
 from pyknos.transforms import lu
+from pyknos.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

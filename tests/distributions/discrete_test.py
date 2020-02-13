@@ -1,8 +1,10 @@
 """Tests for discrete distributions."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
+
 from pyknos.distributions import discrete
 
 

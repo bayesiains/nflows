@@ -1,12 +1,12 @@
 """Tests for the coupling Transforms."""
 
-import torch
 import unittest
 
-from pyknos.nn import nets
-from pyknos.utils import torchutils
+import torch
 
+from pyknos.nn import nets
 from pyknos.transforms import coupling
+from pyknos.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

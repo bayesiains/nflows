@@ -1,9 +1,10 @@
-import torch
 import unittest
 
-from tests.transforms.transform_test import TransformTest
-from pyknos.transforms.reshape import SqueezeTransform
+import torch
+
 import pyknos.utils.typechecks as check
+from pyknos.transforms.reshape import SqueezeTransform
+from tests.transforms.transform_test import TransformTest
 
 
 class SqueezeTransformTest(TransformTest):

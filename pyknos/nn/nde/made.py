@@ -3,12 +3,12 @@
 
 import numpy as np
 import torch
-
-import pyknos.utils as utils
-
 from matplotlib import pyplot as plt
 from torch import distributions, nn
-from torch.nn import functional as F, init
+from torch.nn import functional as F
+from torch.nn import init
+
+import pyknos.utils as utils
 
 
 def _get_input_degrees(in_features):

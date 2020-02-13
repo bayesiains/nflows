@@ -2,7 +2,6 @@
 
 import numpy as np
 import torch
-
 from torch import nn
 
 import pyknos.utils.typechecks as check

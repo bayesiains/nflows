@@ -2,14 +2,13 @@
 
 import numpy as np
 import torch
-
 from torch import nn
-from torch.nn import functional as F, init
+from torch.nn import functional as F
+from torch.nn import init
 
 import pyknos.utils.typechecks as check
-from pyknos.utils import torchutils
-
 from pyknos.transforms.base import Transform
+from pyknos.utils import torchutils
 
 
 class LinearCache:

@@ -4,20 +4,16 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from pyknos.utils import torchutils
-from pyknos.transforms.base import Transform
 import pyknos.transforms.made as made_module
-from pyknos.transforms.splines.linear import linear_spline, unconstrained_linear_spline
-from pyknos.transforms.splines.quadratic import (
-    quadratic_spline,
-    unconstrained_quadratic_spline,
-)
-from pyknos.transforms.splines.cubic import cubic_spline, unconstrained_cubic_spline
 import pyknos.transforms.splines.rational_quadratic as rational_quadratic
+from pyknos.transforms.base import Transform
+from pyknos.transforms.splines.cubic import cubic_spline, unconstrained_cubic_spline
+from pyknos.transforms.splines.linear import linear_spline, unconstrained_linear_spline
+from pyknos.transforms.splines.quadratic import (quadratic_spline,
+                                                 unconstrained_quadratic_spline)
 from pyknos.transforms.splines.rational_quadratic import (
-    rational_quadratic_spline,
-    unconstrained_rational_quadratic_spline,
-)
+    rational_quadratic_spline, unconstrained_rational_quadratic_spline)
+from pyknos.utils import torchutils
 
 
 class AutoregressiveTransform(Transform):

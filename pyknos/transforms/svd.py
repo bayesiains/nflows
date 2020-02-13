@@ -1,11 +1,11 @@
 import numpy as np
 import torch
-
 from torch import nn
-from torch.nn import functional as F, init
+from torch.nn import functional as F
+from torch.nn import init
 
-from pyknos.transforms.orthogonal import HouseholderSequence
 from pyknos.transforms.linear import Linear
+from pyknos.transforms.orthogonal import HouseholderSequence
 
 
 class SVDLinear(Linear):

@@ -1,9 +1,9 @@
+import numpy as np
 import torch
 from torch.nn import functional as F
-import numpy as np
 
-from pyknos.utils import torchutils
 from pyknos.transforms.base import InputOutsideDomain
+from pyknos.utils import torchutils
 
 
 def unconstrained_linear_spline(

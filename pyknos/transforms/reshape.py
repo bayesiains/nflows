@@ -1,8 +1,8 @@
 import torch
 
-from pyknos.utils import torchutils
 import pyknos.utils.typechecks as check
 from pyknos.transforms.base import Transform
+from pyknos.utils import torchutils
 
 
 class SqueezeTransform(Transform):

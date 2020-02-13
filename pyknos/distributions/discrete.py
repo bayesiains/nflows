@@ -1,12 +1,11 @@
 """Implementations of discrete distributions."""
 
 import torch
-
 from torch.nn import functional as F
 
-from pyknos.utils import torchutils
 import pyknos.utils.typechecks as check
 from pyknos.distributions.base import Distribution
+from pyknos.utils import torchutils
 
 
 class ConditionalIndependentBernoulli(Distribution):

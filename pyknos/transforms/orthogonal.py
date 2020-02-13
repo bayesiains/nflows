@@ -1,12 +1,11 @@
 """Implementations of orthogonal transforms."""
 
 import torch
-
 from torch import nn
 
 import pyknos.utils.typechecks as check
-from pyknos.utils import torchutils
 from pyknos.transforms.base import Transform
+from pyknos.utils import torchutils
 
 
 class HouseholderSequence(Transform):

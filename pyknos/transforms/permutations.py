@@ -1,8 +1,8 @@
 """Implementations of permutation-like transforms."""
 
 import torch
-import pyknos.utils.typechecks as check
 
+import pyknos.utils.typechecks as check
 from pyknos.transforms.base import Transform
 
 

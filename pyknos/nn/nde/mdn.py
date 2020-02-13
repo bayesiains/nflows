@@ -5,10 +5,10 @@ C. M. Bishop, "Mixture Density Networks", NCRG Report (1994)
 
 import numpy as np
 import torch
-import pyknos.utils as utils
-
 from torch import nn
 from torch.nn import functional as F
+
+import pyknos.utils as utils
 
 
 class MultivariateGaussianMDN(nn.Module):

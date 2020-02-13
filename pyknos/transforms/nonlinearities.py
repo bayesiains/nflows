@@ -2,19 +2,13 @@
 
 import numpy as np
 import torch
-
 from torch import nn
 from torch.nn import functional as F
 
-from pyknos.utils import torchutils
-
-from pyknos.transforms.base import (
-    Transform,
-    InverseTransform,
-    CompositeTransform,
-    InputOutsideDomain,
-)
 from pyknos.transforms import splines
+from pyknos.transforms.base import (CompositeTransform, InputOutsideDomain,
+                                    InverseTransform, Transform)
+from pyknos.utils import torchutils
 
 
 class Tanh(Transform):

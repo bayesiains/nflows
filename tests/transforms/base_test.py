@@ -4,8 +4,7 @@ import unittest
 import numpy as np
 import torch
 
-from pyknos.transforms import base
-from pyknos.transforms import standard
+from pyknos.transforms import base, standard
 from tests.transforms.transform_test import TransformTest
 
 

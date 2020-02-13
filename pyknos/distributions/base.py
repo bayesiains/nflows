@@ -1,7 +1,6 @@
 """Basic definitions for the distributions module."""
 
 import torch
-
 from torch import nn
 
 import pyknos.utils.typechecks as check

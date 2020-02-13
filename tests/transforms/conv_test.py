@@ -1,5 +1,6 @@
-import torch
 import unittest
+
+import torch
 
 from pyknos.transforms.conv import OneByOneConvolution
 from tests.transforms.transform_test import TransformTest

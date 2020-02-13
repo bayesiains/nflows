@@ -4,13 +4,10 @@ from torch.nn import functional as F
 
 from pyknos.distributions.normal import StandardNormal
 from pyknos.flows.base import Flow
-from pyknos.transforms.base import CompositeTransform
-from pyknos.transforms.permutations import (
-    RandomPermutation,
-    ReversePermutation,
-)
 from pyknos.transforms.autoregressive import MaskedAffineAutoregressiveTransform
+from pyknos.transforms.base import CompositeTransform
 from pyknos.transforms.normalization import BatchNorm
+from pyknos.transforms.permutations import RandomPermutation, ReversePermutation
 
 
 class MaskedAutoregressiveFlow(Flow):

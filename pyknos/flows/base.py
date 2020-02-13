@@ -1,8 +1,7 @@
 """Basic definitions for the flows module."""
 
-from pyknos.utils import torchutils
-
 from pyknos.distributions.base import Distribution
+from pyknos.utils import torchutils
 
 
 class Flow(Distribution):

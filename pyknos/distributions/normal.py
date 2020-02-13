@@ -2,12 +2,10 @@
 
 import numpy as np
 import torch
-
-from pyknos.utils import torchutils
-
 from torch import nn
 
 from pyknos.distributions.base import Distribution
+from pyknos.utils import torchutils
 
 
 class StandardNormal(Distribution):

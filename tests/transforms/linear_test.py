@@ -1,14 +1,13 @@
 """Tests for linear transforms."""
 
-import torch
 import unittest
-
 from unittest.mock import MagicMock
 
-from pyknos.utils import torchutils
+import torch
 
 from pyknos.transforms import linear
 from pyknos.transforms.linear import Linear
+from pyknos.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

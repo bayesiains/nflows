@@ -1,8 +1,9 @@
 """Tests for the standard transforms."""
 
+import unittest
+
 import numpy as np
 import torch
-import unittest
 
 from pyknos.transforms import standard
 from tests.transforms.transform_test import TransformTest
