@@ -1,7 +1,7 @@
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 import numpy as np
 
 from pyknos.transforms.base import InputOutsideDomain

@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 from pyknos.transforms.base import Transform
 import pyknos.transforms.made as made_module
 from pyknos.transforms.splines.linear import linear_spline, unconstrained_linear_spline

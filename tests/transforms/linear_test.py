@@ -5,7 +5,7 @@ import unittest
 
 from unittest.mock import MagicMock
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 from pyknos.transforms import linear
 from pyknos.transforms.linear import Linear

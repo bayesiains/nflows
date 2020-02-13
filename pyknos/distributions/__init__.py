@@ -1,5 +1,5 @@
 from pyknos.distributions.base import Distribution
-from .base import NoMeanException
+from pyknos.distributions.base import NoMeanException
 from pyknos.distributions.mixture import MADEMoG
 from pyknos.distributions.normal import StandardNormal
 from pyknos.distributions.normal import ConditionalDiagonalNormal

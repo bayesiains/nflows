@@ -1,7 +1,7 @@
 import torch
 import unittest
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 from pyknos.transforms import qr
 from tests.transforms.transform_test import TransformTest

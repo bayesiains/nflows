@@ -1,6 +1,6 @@
 import torch
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 import pyknos.utils.typechecks as check
 from pyknos.transforms.base import Transform
 

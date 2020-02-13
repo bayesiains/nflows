@@ -4,7 +4,7 @@ import torch
 
 from torch.nn import functional as F
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 import pyknos.utils.typechecks as check
 from pyknos.distributions.base import Distribution
 

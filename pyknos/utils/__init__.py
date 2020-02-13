@@ -38,8 +38,10 @@ from pyknos.utils.plot import plot_hist_marginals, plot_hist_marginals_pair
 
 from pyknos.utils.mmd import unbiased_mmd_squared, biased_mmd
 
-from pyknos.utils.get_models import (
-    get_classifier,
-    get_neural_likelihood,
-    get_neural_posterior,
-)
+# this causes problems
+# -> create pyknos.models and a dynamic dispatch mechanism
+# from pyknos.utils.get_models import (
+#     get_classifier,
+#     get_neural_likelihood,
+#     get_neural_posterior,
+# )

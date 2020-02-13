@@ -1,6 +1,6 @@
 """Basic definitions for the flows module."""
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 from pyknos.distributions.base import Distribution
 

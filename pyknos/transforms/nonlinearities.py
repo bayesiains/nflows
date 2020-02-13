@@ -6,7 +6,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 from pyknos.transforms.base import (
     Transform,

@@ -7,7 +7,7 @@ from torch import nn
 from torch.nn import functional as F, init
 
 import pyknos.utils.typechecks as check
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 from pyknos.transforms.base import Transform
 

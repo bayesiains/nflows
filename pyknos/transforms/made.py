@@ -3,7 +3,7 @@
 
 import torch
 
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 from torch import nn
 from torch.nn import functional as F, init

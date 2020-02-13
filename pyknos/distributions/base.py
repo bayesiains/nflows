@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 import pyknos.utils.typechecks as check
-import pyknos.utils.torchutils as torchutils
+from pyknos.utils import torchutils
 
 
 class NoMeanException(Exception):
