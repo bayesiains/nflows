@@ -3,12 +3,13 @@
 
 import numpy as np
 import torch
-
-import pyknos.utils as utils
-
 from matplotlib import pyplot as plt
 from torch import distributions, nn
-from torch.nn import functional as F, init
+from torch.nn import functional as F
+from torch.nn import init
+
+from pyknos.utils import torchutils
+from pyknos.utils import plot
 
 
 def _get_input_degrees(in_features):
@@ -46,7 +47,7 @@ class MaskedLinear(nn.Linear):
         cls, in_degrees, out_features, autoregressive_features, random_mask, is_output
     ):
         if is_output:
-            out_degrees = utils.tile(
+            out_degrees = torchutils.tile(
                 _get_input_degrees(autoregressive_features),
                 out_features // autoregressive_features,
             )
@@ -355,7 +356,7 @@ class MixtureOfGaussiansMADE(MADE):
     def sample(self, num_samples, context=None):
 
         if context is not None:
-            context = utils.repeat_rows(context, num_samples)
+            context = torchutils.repeat_rows(context, num_samples)
 
         with torch.no_grad():
 
@@ -446,7 +447,9 @@ def test_():
     )
     context = torch.randn(2, context_features)
     samples = model.sample(1000, context=context)
-    utils.plot_hist_marginals(utils.tensor2numpy(samples.squeeze(0)), lims=[-10, 10])
+    plot.plot_hist_marginals(
+        torchutils.tensor2numpy(samples.squeeze(0)), lims=[-10, 10]
+    )
 
     plt.show()
     # outputs = model(inputs)
@@ -467,7 +470,7 @@ def test_():
 
     # a = torch.randn(2, 2)
     # print(a.repeat(2, 1))
-    # print(utils.repeat_rows(2 * a, 2))
+    # print(torchutils.repeat_rows(2 * a, 2))
 
 
 def main():

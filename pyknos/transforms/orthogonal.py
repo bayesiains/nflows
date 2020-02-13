@@ -1,15 +1,14 @@
 """Implementations of orthogonal transforms."""
 
 import torch
-
 from torch import nn
 
-import pyknos.utils as utils
+import pyknos.utils.typechecks as check
+from pyknos.transforms.base import Transform
+from pyknos.utils import torchutils
 
-from pyknos import transforms
 
-
-class HouseholderSequence(transforms.Transform):
+class HouseholderSequence(Transform):
     """A sequence of Householder transforms.
 
     This class can be used as a way of parameterizing an orthogonal matrix.
@@ -25,9 +24,9 @@ class HouseholderSequence(transforms.Transform):
         Raises:
             TypeError: if arguments are not the right type.
         """
-        if not utils.is_positive_int(features):
+        if not check.is_positive_int(features):
             raise TypeError("Number of features must be a positive integer.")
-        if not utils.is_positive_int(num_transforms):
+        if not check.is_positive_int(num_transforms):
             raise TypeError("Number of transforms must be a positive integer.")
 
         super().__init__()

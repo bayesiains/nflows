@@ -1,7 +1,8 @@
-import torch
 import unittest
 
-from pyknos import transforms
+import torch
+
+from pyknos.transforms.conv import OneByOneConvolution
 from tests.transforms.transform_test import TransformTest
 
 
@@ -10,7 +11,7 @@ class OneByOneConvolutionTest(TransformTest):
         batch_size = 10
         c, h, w = 3, 28, 28
         inputs = torch.randn(batch_size, c, h, w)
-        transform = transforms.OneByOneConvolution(c)
+        transform = OneByOneConvolution(c)
         self.eps = 1e-6
         self.assert_forward_inverse_are_consistent(transform, inputs)
 

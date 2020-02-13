@@ -1,12 +1,12 @@
 """Tests for the coupling Transforms."""
 
-import torch
 import unittest
 
-from pyknos.nn import nets
-import pyknos.utils as utils
+import torch
 
+from pyknos.nn import nets
 from pyknos.transforms import coupling
+from pyknos.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 
@@ -26,7 +26,7 @@ def create_coupling_transform(cls, shape, **kwargs):
                 in_channels=in_channels, out_channels=out_channels, hidden_channels=16
             )
 
-    mask = utils.create_mid_split_binary_mask(shape[0])
+    mask = torchutils.create_mid_split_binary_mask(shape[0])
 
     return cls(mask=mask, transform_net_create_fn=create_net, **kwargs), mask
 

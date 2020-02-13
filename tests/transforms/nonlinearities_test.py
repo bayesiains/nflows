@@ -1,10 +1,13 @@
 """Tests for the invertible non-linearities."""
 
-import torch
 import unittest
 
+import torch
+
 import pyknos.transforms.splines.quadratic
-from pyknos.transforms import base, nonlinearities as nl, standard
+from pyknos.transforms import nonlinearities as nl
+from pyknos.transforms import standard
+from pyknos.transforms.base import InputOutsideDomain
 from tests.transforms.transform_test import TransformTest
 
 
@@ -13,7 +16,7 @@ class TanhTest(TransformTest):
         shape = [2, 3, 4]
         transform = nl.Tanh()
         for value in [-2.0, -1.0, 1.0, 2.0]:
-            with self.assertRaises(base.InputOutsideDomain):
+            with self.assertRaises(InputOutsideDomain):
                 inputs = torch.full(shape, value)
                 transform.inverse(inputs)
 
@@ -33,7 +36,7 @@ class TestPiecewiseCDF(TransformTest):
         for transform in self.transforms:
             with self.subTest(transform=transform):
                 for value in [-1.0, -0.1, 1.1, 2.0]:
-                    with self.assertRaises(base.InputOutsideDomain):
+                    with self.assertRaises(InputOutsideDomain):
                         inputs = torch.full([self.batch_size] + self.shape, value)
                         transform.forward(inputs)
 

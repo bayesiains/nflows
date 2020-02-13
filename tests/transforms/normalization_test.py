@@ -1,7 +1,8 @@
 """Tests for the normalization-based transforms."""
 
-import torch
 import unittest
+
+import torch
 
 from pyknos.transforms import base
 from pyknos.transforms import normalization as norm

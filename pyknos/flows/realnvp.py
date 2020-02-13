@@ -3,13 +3,16 @@
 import torch
 from torch.nn import functional as F
 
-from pyknos import distributions as distributions_
-from pyknos import flows
-from pyknos import transforms
+from pyknos.distributions.normal import StandardNormal
+from pyknos.flows.base import Flow
 from pyknos.nn import nets as nets
+from pyknos.transforms.base import CompositeTransform
+from pyknos.transforms.coupling import (AdditiveCouplingTransform,
+                                        AffineCouplingTransform)
+from pyknos.transforms.normalization import BatchNorm
 
 
-class SimpleRealNVP(flows.Flow):
+class SimpleRealNVP(Flow):
     """An simplified version of Real NVP for 1-dim inputs.
 
     This implementation uses 1-dim checkerboard masking but doesn't use multi-scaling.
@@ -32,9 +35,9 @@ class SimpleRealNVP(flows.Flow):
     ):
 
         if use_volume_preserving:
-            coupling_constructor = transforms.AdditiveCouplingTransform
+            coupling_constructor = AdditiveCouplingTransform
         else:
-            coupling_constructor = transforms.AffineCouplingTransform
+            coupling_constructor = AffineCouplingTransform
 
         mask = torch.ones(features)
         mask[::2] = -1
@@ -58,9 +61,9 @@ class SimpleRealNVP(flows.Flow):
             layers.append(transform)
             mask *= -1
             if batch_norm_between_layers:
-                layers.append(transforms.BatchNorm(features=features))
+                layers.append(BatchNorm(features=features))
 
         super().__init__(
-            transform=transforms.CompositeTransform(layers),
-            distribution=distributions_.StandardNormal([features]),
+            transform=CompositeTransform(layers),
+            distribution=StandardNormal([features]),
         )

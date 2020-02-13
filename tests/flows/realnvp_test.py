@@ -1,8 +1,9 @@
 """Tests for Real NVP."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
 
 from pyknos.flows import realnvp
 

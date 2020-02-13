@@ -2,11 +2,11 @@
 # TODO: should be moved to module nets.
 
 import torch
-
-import pyknos.utils as utils
-
 from torch import nn
-from torch.nn import functional as F, init
+from torch.nn import functional as F
+from torch.nn import init
+
+from pyknos.utils import torchutils
 
 
 def _get_input_degrees(in_features):
@@ -44,7 +44,7 @@ class MaskedLinear(nn.Linear):
         cls, in_degrees, out_features, autoregressive_features, random_mask, is_output
     ):
         if is_output:
-            out_degrees = utils.tile(
+            out_degrees = torchutils.tile(
                 _get_input_degrees(autoregressive_features),
                 out_features // autoregressive_features,
             )

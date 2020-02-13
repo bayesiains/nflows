@@ -1,11 +1,13 @@
 """Tests for the basic flow definitions."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
-from pyknos import transforms
-from pyknos import distributions
+
+from pyknos.distributions.normal import StandardNormal
 from pyknos.flows import base
+from pyknos.transforms.standard import AffineScalarTransform
 
 
 class FlowTest(torchtestcase.TorchTestCase):
@@ -14,8 +16,8 @@ class FlowTest(torchtestcase.TorchTestCase):
         input_shape = [2, 3, 4]
         context_shape = [5, 6]
         flow = base.Flow(
-            transform=transforms.AffineScalarTransform(scale=2.0),
-            distribution=distributions.StandardNormal(input_shape),
+            transform=AffineScalarTransform(scale=2.0),
+            distribution=StandardNormal(input_shape),
         )
         inputs = torch.randn(batch_size, *input_shape)
         maybe_context = torch.randn(batch_size, *context_shape)
@@ -31,8 +33,8 @@ class FlowTest(torchtestcase.TorchTestCase):
         input_shape = [2, 3, 4]
         context_shape = [5, 6]
         flow = base.Flow(
-            transform=transforms.AffineScalarTransform(scale=2.0),
-            distribution=distributions.StandardNormal(input_shape),
+            transform=AffineScalarTransform(scale=2.0),
+            distribution=StandardNormal(input_shape),
         )
         maybe_context = torch.randn(context_size, *context_shape)
         for context in [None, maybe_context]:
@@ -53,8 +55,8 @@ class FlowTest(torchtestcase.TorchTestCase):
         num_samples = 10
         input_shape = [2, 3, 4]
         flow = base.Flow(
-            transform=transforms.AffineScalarTransform(scale=2.0),
-            distribution=distributions.StandardNormal(input_shape),
+            transform=AffineScalarTransform(scale=2.0),
+            distribution=StandardNormal(input_shape),
         )
         samples, log_prob_1 = flow.sample_and_log_prob(num_samples)
         log_prob_2 = flow.log_prob(samples)
@@ -72,8 +74,8 @@ class FlowTest(torchtestcase.TorchTestCase):
         input_shape = [2, 3, 4]
         context_shape = [5, 6]
         flow = base.Flow(
-            transform=transforms.AffineScalarTransform(scale=2.0),
-            distribution=distributions.StandardNormal(input_shape),
+            transform=AffineScalarTransform(scale=2.0),
+            distribution=StandardNormal(input_shape),
         )
         context = torch.randn(context_size, *context_shape)
         samples, log_prob = flow.sample_and_log_prob(num_samples, context=context)
@@ -90,8 +92,8 @@ class FlowTest(torchtestcase.TorchTestCase):
         shape = [2, 3, 4]
         context_shape = [5, 6]
         flow = base.Flow(
-            transform=transforms.AffineScalarTransform(scale=2.0),
-            distribution=distributions.StandardNormal(shape),
+            transform=AffineScalarTransform(scale=2.0),
+            distribution=StandardNormal(shape),
         )
         inputs = torch.randn(batch_size, *shape)
         maybe_context = torch.randn(context_size, *context_shape)

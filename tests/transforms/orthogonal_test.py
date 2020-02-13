@@ -1,11 +1,11 @@
 """Tests for the orthogonal transforms."""
 
-import torch
 import unittest
 
-import pyknos.utils as utils
+import torch
 
 from pyknos.transforms import orthogonal
+from pyknos.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 
@@ -27,7 +27,7 @@ class HouseholderSequenceTest(TransformTest):
                 self.eps = 1e-5
                 self.assertEqual(outputs, inputs @ matrix.t())
                 self.assertEqual(
-                    logabsdet, utils.logabsdet(matrix) * torch.ones(batch_size)
+                    logabsdet, torchutils.logabsdet(matrix) * torch.ones(batch_size)
                 )
 
     def test_inverse(self):
@@ -47,7 +47,7 @@ class HouseholderSequenceTest(TransformTest):
                 self.eps = 1e-5
                 self.assertEqual(outputs, inputs @ matrix)
                 self.assertEqual(
-                    logabsdet, utils.logabsdet(matrix) * torch.ones(batch_size)
+                    logabsdet, torchutils.logabsdet(matrix) * torch.ones(batch_size)
                 )
 
     def test_matrix(self):

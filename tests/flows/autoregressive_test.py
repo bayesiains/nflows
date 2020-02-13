@@ -1,8 +1,9 @@
 """Tests for autoregressive flows."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
 
 from pyknos.flows import autoregressive as ar
 

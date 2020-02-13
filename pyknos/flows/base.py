@@ -1,11 +1,10 @@
 """Basic definitions for the flows module."""
 
-import pyknos.utils as utils
+from pyknos.distributions.base import Distribution
+from pyknos.utils import torchutils
 
-from pyknos import distributions as distributions_
 
-
-class Flow(distributions_.Distribution):
+class Flow(Distribution):
     """Base class for all flow objects."""
 
     def __init__(self, transform, distribution):
@@ -30,14 +29,14 @@ class Flow(distributions_.Distribution):
 
         if context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
-            noise = utils.merge_leading_dims(noise, num_dims=2)
-            context = utils.repeat_rows(context, num_reps=num_samples)
+            noise = torchutils.merge_leading_dims(noise, num_dims=2)
+            context = torchutils.repeat_rows(context, num_reps=num_samples)
 
         samples, _ = self._transform.inverse(noise, context=context)
 
         if context is not None:
             # Split the context dimension from sample dimension.
-            samples = utils.split_leading_dim(samples, shape=[-1, num_samples])
+            samples = torchutils.split_leading_dim(samples, shape=[-1, num_samples])
 
         return samples
 
@@ -52,15 +51,15 @@ class Flow(distributions_.Distribution):
 
         if context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
-            noise = utils.merge_leading_dims(noise, num_dims=2)
-            context = utils.repeat_rows(context, num_reps=num_samples)
+            noise = torchutils.merge_leading_dims(noise, num_dims=2)
+            context = torchutils.repeat_rows(context, num_reps=num_samples)
 
         samples, logabsdet = self._transform.inverse(noise, context=context)
 
         if context is not None:
             # Split the context dimension from sample dimension.
-            samples = utils.split_leading_dim(samples, shape=[-1, num_samples])
-            logabsdet = utils.split_leading_dim(logabsdet, shape=[-1, num_samples])
+            samples = torchutils.split_leading_dim(samples, shape=[-1, num_samples])
+            logabsdet = torchutils.split_leading_dim(logabsdet, shape=[-1, num_samples])
 
         return samples, log_prob - logabsdet
 

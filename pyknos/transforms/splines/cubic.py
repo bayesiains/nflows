@@ -3,8 +3,8 @@ import math
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils as utils
-from pyknos import transforms
+from pyknos.transforms.base import InputOutsideDomain
+from pyknos.utils import torchutils
 
 DEFAULT_MIN_BIN_WIDTH = 1e-3
 DEFAULT_MIN_BIN_HEIGHT = 1e-3
@@ -81,7 +81,7 @@ def cubic_spline(
     Graphics and Applications, 27(3):78–89.
     """
     if torch.min(inputs) < left or torch.max(inputs) > right:
-        raise transforms.InputOutsideDomain()
+        raise InputOutsideDomain()
 
     num_bins = unnormalized_widths.shape[-1]
 
@@ -136,9 +136,9 @@ def cubic_spline(
     d = cumheights[..., :-1]
 
     if inverse:
-        bin_idx = utils.searchsorted(cumheights, inputs)[..., None]
+        bin_idx = torchutils.searchsorted(cumheights, inputs)[..., None]
     else:
-        bin_idx = utils.searchsorted(cumwidths, inputs)[..., None]
+        bin_idx = torchutils.searchsorted(cumwidths, inputs)[..., None]
 
     inputs_a = a.gather(-1, bin_idx)[..., 0]
     inputs_b = b.gather(-1, bin_idx)[..., 0]
@@ -172,11 +172,11 @@ def cubic_spline(
 
         # Deal with one root cases.
 
-        p = utils.cbrt(
+        p = torchutils.cbrt(
             (-depressed_1[one_root_mask] + torch.sqrt(-discriminant[one_root_mask]))
             / 2.0
         )
-        q = utils.cbrt(
+        q = torchutils.cbrt(
             (-depressed_1[one_root_mask] - torch.sqrt(-discriminant[one_root_mask]))
             / 2.0
         )

@@ -1,7 +1,8 @@
 """Tests for permutations."""
 
-import torch
 import unittest
+
+import torch
 
 from pyknos.transforms import permutations
 from tests.transforms.transform_test import TransformTest

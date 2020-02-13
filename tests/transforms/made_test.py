@@ -1,8 +1,9 @@
 """Tests for MADE."""
 
+import unittest
+
 import torch
 import torchtestcase
-import unittest
 
 from pyknos.transforms import made
 

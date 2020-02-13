@@ -1,9 +1,9 @@
-import torch
 import unittest
 
-import pyknos.utils as utils
+import torch
 
 from pyknos.transforms import qr
+from pyknos.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 
@@ -16,7 +16,7 @@ class QRLinearTest(TransformTest):
         orthogonal = self.transform.orthogonal.matrix()
         self.weight = orthogonal @ upper
         self.weight_inverse = torch.inverse(self.weight)
-        self.logabsdet = utils.logabsdet(self.weight)
+        self.logabsdet = torchutils.logabsdet(self.weight)
 
         self.eps = 1e-5
 

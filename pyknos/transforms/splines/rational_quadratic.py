@@ -1,10 +1,9 @@
+import numpy as np
 import torch
 from torch.nn import functional as F
 
-import pyknos.utils as utils
-import numpy as np
-
-from pyknos import transforms
+from pyknos.transforms.base import InputOutsideDomain
+from pyknos.utils import torchutils
 
 DEFAULT_MIN_BIN_WIDTH = 1e-3
 DEFAULT_MIN_BIN_HEIGHT = 1e-3
@@ -76,7 +75,7 @@ def rational_quadratic_spline(
     min_derivative=DEFAULT_MIN_DERIVATIVE,
 ):
     if torch.min(inputs) < left or torch.max(inputs) > right:
-        raise transforms.InputOutsideDomain()
+        raise InputOutsideDomain()
 
     num_bins = unnormalized_widths.shape[-1]
 
@@ -106,9 +105,9 @@ def rational_quadratic_spline(
     heights = cumheights[..., 1:] - cumheights[..., :-1]
 
     if inverse:
-        bin_idx = utils.searchsorted(cumheights, inputs)[..., None]
+        bin_idx = torchutils.searchsorted(cumheights, inputs)[..., None]
     else:
-        bin_idx = utils.searchsorted(cumwidths, inputs)[..., None]
+        bin_idx = torchutils.searchsorted(cumwidths, inputs)[..., None]
 
     input_cumwidths = cumwidths.gather(-1, bin_idx)[..., 0]
     input_bin_widths = widths.gather(-1, bin_idx)[..., 0]
