@@ -4,8 +4,8 @@ import unittest
 
 import torch
 
-from pyknos.transforms import orthogonal
-from pyknos.utils import torchutils
+from nflows.transforms import orthogonal
+from nflows.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

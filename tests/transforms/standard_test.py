@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 import torch
 
-from pyknos.transforms import standard
+from nflows.transforms import standard
 from tests.transforms.transform_test import TransformTest
 
 

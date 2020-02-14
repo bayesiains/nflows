@@ -5,7 +5,7 @@ import unittest
 import torch
 import torchtestcase
 
-from pyknos.flows import realnvp
+from nflows.flows import realnvp
 
 
 class SimpleRealNVPTest(torchtestcase.TorchTestCase):

@@ -5,7 +5,7 @@ import unittest
 import torch
 import torchtestcase
 
-from pyknos.transforms import made
+from nflows.transforms import made
 
 
 class ShapeTest(torchtestcase.TorchTestCase):

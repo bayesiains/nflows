@@ -2,8 +2,8 @@ import unittest
 
 import torch
 
-from pyknos.transforms import qr
-from pyknos.utils import torchutils
+from nflows.transforms import qr
+from nflows.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

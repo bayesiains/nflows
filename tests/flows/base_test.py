@@ -5,9 +5,9 @@ import unittest
 import torch
 import torchtestcase
 
-from pyknos.distributions.normal import StandardNormal
-from pyknos.flows import base
-from pyknos.transforms.standard import AffineScalarTransform
+from nflows.distributions.normal import StandardNormal
+from nflows.flows import base
+from nflows.transforms.standard import AffineScalarTransform
 
 
 class FlowTest(torchtestcase.TorchTestCase):

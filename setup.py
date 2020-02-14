@@ -1,14 +1,14 @@
 from setuptools import find_packages, setup
 
-exec(open("pyknos/version.py").read())
+exec(open("nflows/version.py").read())
 
 setup(
-    name="pyknos",
+    name="nflows",
     version=__version__,
     description="",
-    url="https://github.com/mackelab/pyknos",
-    author="Conor Durkan, George Papamakarios, Artur Bekasov",
-    packages=find_packages(exclude=["tests"]),
+    url="https://github.com/mackelab/nflows",
+    author="Conor Durkan, Artur Bekasov, George Papamakarios",
+    packages=find_packages(exclude=["sbi", "tests"]),
     license="GPLv3",
     install_requires=[
         "matplotlib",

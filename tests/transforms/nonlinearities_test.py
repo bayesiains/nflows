@@ -4,10 +4,10 @@ import unittest
 
 import torch
 
-import pyknos.transforms.splines.quadratic
-from pyknos.transforms import nonlinearities as nl
-from pyknos.transforms import standard
-from pyknos.transforms.base import InputOutsideDomain
+import nflows.transforms.splines.quadratic
+from nflows.transforms import nonlinearities as nl
+from nflows.transforms import standard
+from nflows.transforms.base import InputOutsideDomain
 from tests.transforms.transform_test import TransformTest
 
 
