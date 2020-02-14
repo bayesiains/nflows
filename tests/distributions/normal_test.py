@@ -5,7 +5,7 @@ import unittest
 import torch
 import torchtestcase
 
-from pyknos.distributions import normal
+from nflows.distributions import normal
 
 
 class StandardNormalTest(torchtestcase.TorchTestCase):

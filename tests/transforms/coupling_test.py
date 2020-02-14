@@ -4,9 +4,9 @@ import unittest
 
 import torch
 
-from pyknos.nn import nets
-from pyknos.transforms import coupling
-from pyknos.utils import torchutils
+from nflows.nn import nets
+from nflows.transforms import coupling
+from nflows.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

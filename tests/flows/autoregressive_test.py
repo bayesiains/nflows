@@ -5,7 +5,7 @@ import unittest
 import torch
 import torchtestcase
 
-from pyknos.flows import autoregressive as ar
+from nflows.flows import autoregressive as ar
 
 
 class MaskedAutoregressiveFlowTest(torchtestcase.TorchTestCase):

@@ -1,7 +1,7 @@
 import torch
 import torchtestcase
 
-from pyknos.transforms import splines
+from nflows.transforms import splines
 
 
 class LinearSplineTest(torchtestcase.TorchTestCase):

@@ -2,8 +2,8 @@ import unittest
 
 import torch
 
-import pyknos.utils.typechecks as check
-from pyknos.transforms.reshape import SqueezeTransform
+import nflows.utils.typechecks as check
+from nflows.transforms.reshape import SqueezeTransform
 from tests.transforms.transform_test import TransformTest
 
 

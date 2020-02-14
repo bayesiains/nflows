@@ -4,7 +4,7 @@ import unittest
 
 import torch
 
-from pyknos.transforms import autoregressive
+from nflows.transforms import autoregressive
 from tests.transforms.transform_test import TransformTest
 
 

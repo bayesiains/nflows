@@ -2,7 +2,7 @@
 # conda env create --file environment.yml
 # update:
 # conda env update --file environment.yml --prune
-name: pyknos
+name: nflows
 
 channels:
   - conda-forge
