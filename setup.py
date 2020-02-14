@@ -13,8 +13,6 @@ setup(
     install_requires=[
         "matplotlib",
         "numpy",
-        "pyro-ppl",
-        "scipy",
         "tensorboard",
         "torch",
         "tqdm",
@@ -23,7 +21,6 @@ setup(
         "dev": [
             "autoflake",
             "black",
-            "deepdiff",
             "flake8",
             "isort",
             "pytest",

@@ -9,7 +9,6 @@ channels:
   - pytorch
 
 dependencies:
-  - autopep8
   - autoflake
   - black
   - cudatoolkit
@@ -18,21 +17,14 @@ dependencies:
   - jupyter
   - matplotlib
   - numpy
-  - pillow
   - pip
   - pip:
-    - pyro-ppl
     - torchtestcase
     - -e .  # install package in development mode
   - pytest
-  - pytest-pep8
   - python
   - pytorch
   - pyyaml
-  - rope
-  - scikit-learn
-  - scipy
-  - seaborn
   - tensorboard
   - tqdm
  
