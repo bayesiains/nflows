@@ -4,8 +4,8 @@ import unittest
 
 import torch
 
-from pyknos.transforms import base
-from pyknos.transforms import normalization as norm
+from nflows.transforms import base
+from nflows.transforms import normalization as norm
 from tests.transforms.transform_test import TransformTest
 
 

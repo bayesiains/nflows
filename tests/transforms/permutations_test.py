@@ -4,7 +4,7 @@ import unittest
 
 import torch
 
-from pyknos.transforms import permutations
+from nflows.transforms import permutations
 from tests.transforms.transform_test import TransformTest
 
 

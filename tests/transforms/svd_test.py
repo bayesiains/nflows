@@ -2,8 +2,8 @@ import unittest
 
 import torch
 
-from pyknos.transforms.svd import SVDLinear
-from pyknos.utils import torchutils
+from nflows.transforms.svd import SVDLinear
+from nflows.utils import torchutils
 from tests.transforms.transform_test import TransformTest
 
 

@@ -1,7 +1,7 @@
 import torch
 import torchtestcase
 
-from pyknos.transforms import base
+from nflows.transforms import base
 
 
 class TransformTest(torchtestcase.TorchTestCase):

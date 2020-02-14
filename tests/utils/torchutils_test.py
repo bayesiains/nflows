@@ -5,7 +5,7 @@ import unittest
 import torch
 import torchtestcase
 
-from pyknos.utils import torchutils
+from nflows.utils import torchutils
 
 
 class TorchUtilsTest(torchtestcase.TorchTestCase):

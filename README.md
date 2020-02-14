@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mackelab/pyknos.svg?branch=master)](https://travis-ci.org/mackelab/pyknos)
+[![Build Status](https://travis-ci.org/mackelab/nflows.svg?branch=master)](https://travis-ci.org/mackelab/nflows)
 
 
 ## Description

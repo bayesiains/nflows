@@ -1,13 +1,13 @@
 from setuptools import find_packages, setup
 
-exec(open("pyknos/version.py").read())
+exec(open("nflows/version.py").read())
 
 setup(
-    name="pyknos",
+    name="nflows",
     version=__version__,
     description="",
-    url="https://github.com/mackelab/pyknos",
-    author="Conor Durkan, George Papamakarios, Artur Bekasov",
+    url="https://github.com/mackelab/nflows",
+    author="Conor Durkan, Artur Bekasov, George Papamakarios",
     packages=find_packages(exclude=["tests"]),
     license="GPLv3",
     install_requires=[
