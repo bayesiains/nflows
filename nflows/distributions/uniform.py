@@ -3,7 +3,6 @@ import torch
 from matplotlib import pyplot as plt
 from torch import distributions
 
-import nflows.utils.plot as plot
 from nflows.utils import torchutils
 
 
@@ -80,37 +79,3 @@ class LotkaVolterraOscillating:
 
         return samples
 
-
-def _test():
-    # prior = MG1Uniform(low=torch.zeros(3), high=torch.Tensor([10, 10, 1 / 3]))
-    # uniform = distributions.Uniform(
-    #     low=torch.zeros(3), high=torch.Tensor([10, 10, 1 / 3])
-    # )
-    # x = torch.Tensor([10, 20, 1 / 3]).reshape(1, -1)
-    # print(uniform.log_prob(x))
-    # print(prior.log_prob(x))
-    d = LotkaVolterraOscillating()
-    samples = d.sample((1000,))
-    plot.plot_hist_marginals(utils.tensor2numpy(samples), lims=[-6, 3])
-    plt.show()
-    # w, x, y, z = np.meshgrid(
-    #     np.linspace(-5, 2, 100),
-    #     np.linspace(-5, 2, 100),
-    #     np.linspace(-5, 2, 100),
-    #     np.linspace(-5, 2, 100),
-    # )
-    # print(w.shape)
-    # data = np.concatenate(
-    #     (w.reshape(-1, 1), x.reshape(-1, 1), y.reshape(-1, 1), z.reshape(-1, 1)),
-    #     axis=-1,
-    # )
-    # print(data.shape)
-    # print(samples.shape)
-
-
-def main():
-    _test()
-
-
-if __name__ == "__main__":
-    main()

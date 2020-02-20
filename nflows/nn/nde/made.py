@@ -9,7 +9,6 @@ from torch.nn import functional as F
 from torch.nn import init
 
 from nflows.utils import torchutils
-from nflows.utils import plot
 
 
 def _get_input_degrees(in_features):
@@ -426,56 +425,3 @@ class MixtureOfGaussiansMADE(MADE):
         #     self.features * self.num_mixture_components
         # )
 
-
-def test_():
-    features = 3
-    context_features = 5
-    num_mixture_components = 5
-    model = MixtureOfGaussiansMADE(
-        features=features,
-        hidden_features=32,
-        context_features=context_features,
-        num_mixture_components=num_mixture_components,
-        num_blocks=2,
-        use_residual_blocks=True,
-        random_mask=False,
-        activation=F.relu,
-        dropout_probability=0,
-        use_batch_norm=False,
-        epsilon=1e-2,
-        custom_initialization=True,
-    )
-    context = torch.randn(2, context_features)
-    samples = model.sample(1000, context=context)
-    plot.plot_hist_marginals(
-        torchutils.tensor2numpy(samples.squeeze(0)), lims=[-10, 10]
-    )
-
-    plt.show()
-    # outputs = model(inputs)
-    # outputs = outputs.reshape(2, features, num_mixture_components, 3)
-    #
-    # logits, means, unconstrained_stds = (
-    #     outputs[..., 0],
-    #     outputs[..., 1],
-    #     outputs[..., 2],
-    # )
-    # mixture_coefficients = torch.softmax(logits, dim=-1)
-    # print(mixture_coefficients)
-    # print(means)
-    # stds = F.softplus(unconstrained_stds) + 1e-2
-    # print(stds)
-    # # samples = model.sample(16, context=torch.randn(9, context_features))
-    # print(samples.shape)
-
-    # a = torch.randn(2, 2)
-    # print(a.repeat(2, 1))
-    # print(torchutils.repeat_rows(2 * a, 2))
-
-
-def main():
-    test_()
-
-
-if __name__ == "__main__":
-    main()
