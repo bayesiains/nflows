@@ -1,6 +1,7 @@
 """Tests for the PyTorch utility functions."""
 
 import unittest
+import numpy as np
 
 import torch
 import torchtestcase
@@ -95,6 +96,15 @@ class TorchUtilsTest(torchtestcase.TorchTestCase):
         inputs = torch.rand(*shape)
         idx = torchutils.searchsorted(bin_locations, inputs)
         self.assertEqual(idx.shape, inputs.shape)
+
+    def test_ensure_tensor(self):
+        a_tensor = torch.randn([1, 2])
+        an_array = np.array([1, 2, 3])
+        a_scalar = 2.0
+
+        assert isinstance(torchutils.ensure_tensor(a_tensor), torch.Tensor)
+        assert isinstance(torchutils.ensure_tensor(an_array), torch.Tensor)
+        assert isinstance(torchutils.ensure_tensor(a_scalar), torch.Tensor)
 
 
 if __name__ == "__main__":
