@@ -1,7 +1,7 @@
 """Implementations of some standard transforms."""
 
 import torch
-
+from nflows.utils.torchutils import ensure_tensor
 from nflows.transforms.base import Transform
 
 
@@ -29,10 +29,10 @@ class AffineScalarTransform(Transform):
             raise ValueError("Scale cannot be zero.")
 
         self.register_buffer(
-            "_shift", torch.tensor(shift if (shift is not None) else 0.0)
+            "_shift", ensure_tensor(shift if (shift is not None) else 0.0)
         )
         self.register_buffer(
-            "_scale", torch.tensor(scale if (scale is not None) else 1.0)
+            "_scale", ensure_tensor(scale if (scale is not None) else 1.0)
         )
 
     @property
@@ -41,14 +41,14 @@ class AffineScalarTransform(Transform):
 
     def forward(self, inputs, context=None):
         batch_size = inputs.shape[0]
-        num_dims = torch.prod(torch.tensor(inputs.shape[1:]), dtype=torch.float)
+        num_dims = torch.prod(ensure_tensor(inputs.shape[1:]), dtype=torch.float)
         outputs = inputs * self._scale + self._shift
         logabsdet = torch.full([batch_size], self._log_scale * num_dims)
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
         batch_size = inputs.shape[0]
-        num_dims = torch.prod(torch.tensor(inputs.shape[1:]), dtype=torch.float)
+        num_dims = torch.prod(ensure_tensor(inputs.shape[1:]), dtype=torch.float)
         outputs = (inputs - self._shift) / self._scale
         logabsdet = torch.full([batch_size], -self._log_scale * num_dims)
         return outputs, logabsdet
@@ -59,10 +59,10 @@ class AffineTransform(Transform):
         super().__init__()
 
         self.register_buffer(
-            "_shift", torch.tensor(shift if (shift is not None) else 0.0)
+            "_shift", ensure_tensor(shift if (shift is not None) else 0.0)
         )
         self.register_buffer(
-            "_scale", torch.tensor(scale if (scale is not None) else 1.0)
+            "_scale", ensure_tensor(scale if (scale is not None) else 1.0)
         )
 
     @property
