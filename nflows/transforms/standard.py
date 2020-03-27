@@ -27,6 +27,7 @@ class PointwiseAffineTransform(Transform):
         scale: torch.Tensor = torch.tensor(1.0),
     ):
         super().__init__()
+        shift, scale = map(ensure_tensor, (shift, scale))
 
         if shift is None and scale is None:
             raise ValueError("At least one of scale and shift must be provided.")
