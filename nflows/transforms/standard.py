@@ -39,7 +39,7 @@ class PointwiseAffineTransform(Transform):
 
     @property
     def _log_scale(self):
-        return torch.log(torch.abs(self._scale))
+        return torch.log(self._scale)
 
     def forward(self, inputs, context=None):
         batch_size = inputs.shape[0]
