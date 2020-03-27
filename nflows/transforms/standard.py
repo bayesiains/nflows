@@ -41,9 +41,17 @@ class PointwiseAffineTransform(Transform):
     def _log_scale(self):
         return torch.log(self._scale)
 
-    def forward(self, inputs, context=None):
-        batch_size = inputs.shape[0]
-        num_dims = torch.prod(ensure_tensor(inputs.shape[1:]), dtype=torch.float)
+    # XXX memoize?
+    def _batch_logabsdet(self, batch_shape: torch.Size):
+        """Return log abs det with input batch shape."""
+        scale_numel = int(np.prod(self._scale.shape))
+        if scale_numel > 1:
+            return self._log_scale.expand(batch_shape).sum()
+        else:
+            # optimise for scalar scale: expand = numel equal scalars
+            # also needed to match test at eps < 1E-5
+            batch_numel = int(np.prod(batch_shape))
+            return self._log_scale * batch_numel
         outputs = inputs * self._scale + self._shift
         logabsdet = torch.full([batch_size], self._log_scale * num_dims)
         return outputs, logabsdet
