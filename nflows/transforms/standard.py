@@ -29,10 +29,10 @@ class PointwiseAffineTransform(Transform):
         super().__init__()
         shift, scale = map(ensure_tensor, (shift, scale))
 
-        if shift is None and scale is None:
-            raise ValueError("At least one of scale and shift must be provided.")
-        if scale == 0.0:
-            raise ValueError("Scale cannot be zero.")
+        # reject scales < ~0 (upto dtype precision)
+        is_scale_positive = torch.isfinite(torch.log(scale)).any()
+        if not is_scale_positive:
+            raise ValueError("Scale must be strictly positive.")
 
         self.register_buffer("_shift", shift)
         self.register_buffer("_scale", scale)
