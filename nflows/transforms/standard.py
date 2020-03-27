@@ -34,12 +34,8 @@ class PointwiseAffineTransform(Transform):
         if scale == 0.0:
             raise ValueError("Scale cannot be zero.")
 
-        self.register_buffer(
-            "_shift", ensure_tensor(shift if (shift is not None) else 0.0)
-        )
-        self.register_buffer(
-            "_scale", ensure_tensor(scale if (scale is not None) else 1.0)
-        )
+        self.register_buffer("_shift", shift)
+        self.register_buffer("_scale", scale)
 
     @property
     def _log_scale(self):
