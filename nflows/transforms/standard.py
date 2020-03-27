@@ -52,15 +52,21 @@ class PointwiseAffineTransform(Transform):
             # also needed to match test at eps < 1E-5
             batch_numel = int(np.prod(batch_shape))
             return self._log_scale * batch_numel
+
+    def forward(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
+        num_batches, *batch_shape = inputs.shape
+
+        # RuntimeError here => shift/scale not broadcastable to input
         outputs = inputs * self._scale + self._shift
-        logabsdet = torch.full([batch_size], self._log_scale * num_dims)
+        logabsdet = self._batch_logabsdet(batch_shape).expand(num_batches)
+
         return outputs, logabsdet
 
-    def inverse(self, inputs, context=None):
-        batch_size = inputs.shape[0]
-        num_dims = torch.prod(ensure_tensor(inputs.shape[1:]), dtype=torch.float)
+    def inverse(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
+        num_batches, *batch_shape = inputs.shape
         outputs = (inputs - self._shift) / self._scale
-        logabsdet = torch.full([batch_size], -self._log_scale * num_dims)
+        logabsdet = -self._batch_logabsdet(batch_shape).expand(num_batches)
+
         return outputs, logabsdet
 
 
@@ -82,10 +88,5 @@ class AffineTransform(PointwiseAffineTransform):
 
         super().__init__(shift, scale)
 
-    def forward(self, inputs, context=None):
-        batch_size = inputs.shape[0]
-        outputs = inputs * self._scale + self._shift
-        logabsdet = self._log_scale.reshape(1, -1).repeat(batch_size, 1).sum(dim=-1)
-        return outputs, logabsdet
 
 AffineScalarTransform = AffineTransform
