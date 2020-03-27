@@ -1,5 +1,8 @@
 """Implementations of some standard transforms."""
 
+from typing import Optional
+import warnings
+import numpy as np
 import torch
 from nflows.utils.torchutils import ensure_tensor
 from nflows.transforms.base import Transform
@@ -8,12 +11,12 @@ from nflows.transforms.base import Transform
 class IdentityTransform(Transform):
     """Transform that leaves input unchanged."""
 
-    def forward(self, inputs, context=None):
-        batch_size = inputs.shape[0]
-        logabsdet = torch.zeros(batch_size)
+    def forward(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
+        num_batches = inputs.shape[0]
+        logabsdet = torch.zeros(num_batches)
         return inputs, logabsdet
 
-    def inverse(self, inputs, context=None):
+    def inverse(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
         return self(inputs, context)
 
 
