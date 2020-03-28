@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from nflows.utils.torchutils import ensure_tensor
 from nflows.transforms.base import Transform
+from nflows.utils.torchutils import ensure_tensor, numel
 
 
 class IdentityTransform(Transform):
@@ -44,14 +45,13 @@ class PointwiseAffineTransform(Transform):
     # XXX memoize?
     def _batch_logabsdet(self, batch_shape: torch.Size):
         """Return log abs det with input batch shape."""
-        scale_numel = int(np.prod(self._scale.shape))
-        if scale_numel > 1:
+
+        if numel(self._log_scale) > 1:
             return self._log_scale.expand(batch_shape).sum()
         else:
-            # optimise for scalar scale: expand = numel equal scalars
-            # also needed to match test at eps < 1E-5
-            batch_numel = int(np.prod(batch_shape))
-            return self._log_scale * batch_numel
+            # when log_scale is a scalar, we use n*log_scale, which is more
+            # numerically accurate than \sum_1^n log_scale.
+            return self._log_scale * numel(batch_shape)
 
     def forward(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
         num_batches, *batch_shape = inputs.shape
