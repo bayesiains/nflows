@@ -1,10 +1,11 @@
 """Implementations of some standard transforms."""
 
-from typing import Optional
+from typing import Optional, Union
 import warnings
-import numpy as np
+
 import torch
-from nflows.utils.torchutils import ensure_tensor
+from torch import Tensor
+
 from nflows.transforms.base import Transform
 from nflows.utils.torchutils import ensure_tensor, numel
 
@@ -12,27 +13,25 @@ from nflows.utils.torchutils import ensure_tensor, numel
 class IdentityTransform(Transform):
     """Transform that leaves input unchanged."""
 
-    def forward(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
-        num_batches = inputs.shape[0]
-        logabsdet = torch.zeros(num_batches)
+    def forward(self, inputs: Tensor, context=Optional[Tensor]):
+        batch_size = inputs.size(0)
+        logabsdet = torch.zeros(batch_size)
         return inputs, logabsdet
 
-    def inverse(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
+    def inverse(self, inputs: Tensor, context=Optional[Tensor]):
         return self(inputs, context)
 
 
 class PointwiseAffineTransform(Transform):
+    """Forward transform X = X * scale + shift."""
+
     def __init__(
-        self,
-        shift: torch.Tensor = torch.tensor(0.0),
-        scale: torch.Tensor = torch.tensor(1.0),
+        self, shift: Union[Tensor, float] = 0.0, scale: Union[Tensor, float] = 1.0,
     ):
         super().__init__()
         shift, scale = map(ensure_tensor, (shift, scale))
 
-        # reject scales < ~0 (upto dtype precision)
-        is_scale_positive = torch.isfinite(torch.log(scale)).any()
-        if not is_scale_positive:
+        if not (scale > 0.0).all():
             raise ValueError("Scale must be strictly positive.")
 
         self.register_buffer("_shift", shift)
@@ -53,38 +52,37 @@ class PointwiseAffineTransform(Transform):
             # numerically accurate than \sum_1^n log_scale.
             return self._log_scale * numel(batch_shape)
 
-    def forward(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
-        num_batches, *batch_shape = inputs.shape
+    def forward(self, inputs: Tensor, context=Optional[Tensor]):
+        batch_size, *batch_shape = inputs.size()
 
         # RuntimeError here => shift/scale not broadcastable to input
         outputs = inputs * self._scale + self._shift
-        logabsdet = self._batch_logabsdet(batch_shape).expand(num_batches)
+        logabsdet = self._batch_logabsdet(batch_shape).expand(batch_size)
 
         return outputs, logabsdet
 
-    def inverse(self, inputs: torch.Tensor, context=Optional[torch.Tensor]):
-        num_batches, *batch_shape = inputs.shape
+    def inverse(self, inputs: Tensor, context=Optional[Tensor]):
+        batch_size, *batch_shape = inputs.size()
         outputs = (inputs - self._shift) / self._scale
-        logabsdet = -self._batch_logabsdet(batch_shape).expand(num_batches)
+        logabsdet = -self._batch_logabsdet(batch_shape).expand(batch_size)
 
         return outputs, logabsdet
 
 
 class AffineTransform(PointwiseAffineTransform):
     def __init__(
-        self,
-        shift: torch.Tensor = torch.tensor(0.0),
-        scale: torch.Tensor = torch.tensor(1.0),
+        self, shift: Union[Tensor, float] = 0.0, scale: Union[Tensor, float] = 1.0,
     ):
 
         warnings.warn("Use PointwiseAffineTransform", DeprecationWarning)
 
         if shift is None:
-            warnings.warn("`shift=None` deprecated; default is 0.0")
-            shift = torch.tensor(0.0)
+            shift = 0.0
+            warnings.warn(f"`shift=None` deprecated; default is {shift}")
+
         if scale is None:
-            warnings.warn("`scale=None` deprecated; default is 1.0.")
-            scale = torch.tensor(1.0)
+            scale = 1.0
+            warnings.warn(f"`scale=None` deprecated; default is {scale}.")
 
         super().__init__(shift, scale)
 
