@@ -175,25 +175,3 @@ def gaussian_kde_log_eval(samples, query):
     d = -np.log(N) - (D / 2) * np.log(2 * np.pi) - D * np.log(std)
     c += d
     return torch.logsumexp(c, dim=-1)
-
-
-def ensure_tensor(arg):
-    """Return argument cast into a tensor if it's not one already."""
-
-    if not isinstance(arg, torch.Tensor):
-        return torch.tensor(arg)
-
-    return arg
-
-
-def numel(t: Union[torch.Tensor, torch.Size]) -> int:
-    """Return number of elements given a tensor or its size.
-
-    Args:
-        t: a Tensor or tensor's Size.
-    """
-
-    if isinstance(t, torch.Tensor):
-        t = t.size()
-
-    return int(np.prod(t))
