@@ -161,7 +161,7 @@ def get_temperature(max_value, bound=1 - 1e-3):
     return temperature
 
 
-def notinfnotnan(x: torch.Tensor) -> torch.Tensor[bool]:
+def notinfnotnan(x: torch.Tensor) -> torch.Tensor:
     return torch.isfinite(x).all()
 
 
