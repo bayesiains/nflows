@@ -34,7 +34,7 @@ def create_coupling_transform(cls, shape, **kwargs):
 batch_size = 10
 
 
-class AffineTransformTest(TransformTest):
+class AffineCouplingTransformTest(TransformTest):
     shapes = [[20], [2, 4, 4]]
 
     def test_forward(self):

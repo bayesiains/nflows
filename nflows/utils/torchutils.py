@@ -1,5 +1,6 @@
 """Various PyTorch utility functions."""
 
+from typing import Union
 import numpy as np
 import torch
 
@@ -160,8 +161,8 @@ def get_temperature(max_value, bound=1 - 1e-3):
     return temperature
 
 
-def notinfnotnan(x):
-    return torch.all(~torch.isnan(x)) and torch.all(~torch.isinf(x))
+def notinfnotnan(x: torch.Tensor) -> torch.Tensor:
+    return torch.isfinite(x).all()
 
 
 def gaussian_kde_log_eval(samples, query):

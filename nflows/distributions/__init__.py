@@ -9,5 +9,4 @@ from nflows.distributions.normal import (
 from nflows.distributions.uniform import (
     LotkaVolterraOscillating,
     MG1Uniform,
-    TweakedUniform,
 )
