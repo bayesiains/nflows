@@ -16,10 +16,10 @@ class CompositeTransformTest(TransformTest):
         transforms = [
             standard.AffineScalarTransform(scale=2.0),
             standard.IdentityTransform(),
-            standard.AffineScalarTransform(scale=-0.25),
+            standard.AffineScalarTransform(scale=0.25),
         ]
         composite = base.CompositeTransform(transforms)
-        reference = standard.AffineScalarTransform(scale=-0.5)
+        reference = standard.AffineScalarTransform(scale=0.5)
         outputs, logabsdet = composite(inputs)
         outputs_ref, logabsdet_ref = reference(inputs)
         self.assert_tensor_is_good(outputs, [batch_size] + shape)
@@ -34,10 +34,10 @@ class CompositeTransformTest(TransformTest):
         transforms = [
             standard.AffineScalarTransform(scale=2.0),
             standard.IdentityTransform(),
-            standard.AffineScalarTransform(scale=-0.25),
+            standard.AffineScalarTransform(scale=0.25),
         ]
         composite = base.CompositeTransform(transforms)
-        reference = standard.AffineScalarTransform(scale=-0.5)
+        reference = standard.AffineScalarTransform(scale=0.5)
         outputs, logabsdet = composite.inverse(inputs)
         outputs_ref, logabsdet_ref = reference.inverse(inputs)
         self.assert_tensor_is_good(outputs, [batch_size] + shape)
@@ -103,8 +103,8 @@ class InverseTransformTest(TransformTest):
         batch_size = 10
         shape = [2, 3, 4]
         inputs = torch.randn(batch_size, *shape)
-        transform = base.InverseTransform(standard.AffineScalarTransform(scale=-2.0))
-        reference = standard.AffineScalarTransform(scale=-0.5)
+        transform = base.InverseTransform(standard.AffineScalarTransform(scale=2.0))
+        reference = standard.AffineScalarTransform(scale=0.5)
         outputs, logabsdet = transform(inputs)
         outputs_ref, logabsdet_ref = reference(inputs)
         self.assert_tensor_is_good(outputs, [batch_size] + shape)
@@ -116,8 +116,8 @@ class InverseTransformTest(TransformTest):
         batch_size = 10
         shape = [2, 3, 4]
         inputs = torch.randn(batch_size, *shape)
-        transform = base.InverseTransform(standard.AffineScalarTransform(scale=-2.0))
-        reference = standard.AffineScalarTransform(scale=-0.5)
+        transform = base.InverseTransform(standard.AffineScalarTransform(scale=2.0))
+        reference = standard.AffineScalarTransform(scale=0.5)
         outputs, logabsdet = transform.inverse(inputs)
         outputs_ref, logabsdet_ref = reference.inverse(inputs)
         self.assert_tensor_is_good(outputs, [batch_size] + shape)
