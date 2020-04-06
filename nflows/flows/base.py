@@ -24,10 +24,12 @@ class Flow(Distribution):
         self._transform = transform
         self._distribution = distribution
         if embedding_net is not None:
-            assert isinstance(embedding_net, torch.nn.Module), 'embedding_net is not a nn.Module. ' \
-                                                         'If you want to use hard-coded summary features, ' \
-                                                         'please simply pass the encoded features and pass ' \
-                                                         'embedding_net=None'
+            assert isinstance(embedding_net, torch.nn.Module), (
+                "embedding_net is not a nn.Module. "
+                "If you want to use hard-coded summary features, "
+                "please simply pass the encoded features and pass "
+                "embedding_net=None"
+            )
             self._embedding_net = embedding_net
         else:
             self._embedding_net = torch.nn.Identity()
@@ -45,7 +47,9 @@ class Flow(Distribution):
         if embedded_context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
             noise = torchutils.merge_leading_dims(noise, num_dims=2)
-            embedded_context = torchutils.repeat_rows(embedded_context, num_reps=num_samples)
+            embedded_context = torchutils.repeat_rows(
+                embedded_context, num_reps=num_samples
+            )
 
         samples, _ = self._transform.inverse(noise, context=embedded_context)
 
@@ -68,7 +72,9 @@ class Flow(Distribution):
         if embedded_context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
             noise = torchutils.merge_leading_dims(noise, num_dims=2)
-            embedded_context = torchutils.repeat_rows(embedded_context, num_reps=num_samples)
+            embedded_context = torchutils.repeat_rows(
+                embedded_context, num_reps=num_samples
+            )
 
         samples, logabsdet = self._transform.inverse(noise, context=embedded_context)
 
