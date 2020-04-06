@@ -159,10 +159,6 @@ def get_temperature(max_value, bound=1 - 1e-3):
     return temperature
 
 
-def notinfnotnan(x: torch.Tensor) -> torch.Tensor:
-    return torch.isfinite(x).all()
-
-
 def gaussian_kde_log_eval(samples, query):
     N, D = samples.shape[0], samples.shape[-1]
     std = N ** (-1 / (D + 4))
