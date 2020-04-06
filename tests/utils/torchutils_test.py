@@ -1,12 +1,11 @@
 """Tests for the PyTorch utility functions."""
 
 import unittest
-import numpy as np
 
 import torch
-import torchtestcase
 
 from nflows.utils import torchutils
+import torchtestcase
 
 
 class TorchUtilsTest(torchtestcase.TorchTestCase):

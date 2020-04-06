@@ -1,6 +1,6 @@
 """Implementations of some standard transforms."""
 
-from typing import Optional, Union, Tuple, Iterable
+from typing import Iterable, Optional, Tuple, Union
 import warnings
 
 import torch
