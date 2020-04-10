@@ -50,5 +50,6 @@ from nflows.transforms.standard import (
     AffineScalarTransform,
     AffineTransform,
     IdentityTransform,
+    PointwiseAffineTransform,
 )
 from nflows.transforms.svd import SVDLinear

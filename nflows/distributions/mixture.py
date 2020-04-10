@@ -1,5 +1,3 @@
-import torch
-from torch import distributions, nn
 from torch.nn import functional as F
 
 from nflows.distributions.base import Distribution

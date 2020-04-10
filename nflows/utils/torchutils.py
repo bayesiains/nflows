@@ -1,10 +1,8 @@
 """Various PyTorch utility functions."""
 
-from typing import Union
+import nflows.utils.typechecks as check
 import numpy as np
 import torch
-
-import nflows.utils.typechecks as check
 
 
 def tile(x, n):
@@ -159,10 +157,6 @@ def get_temperature(max_value, bound=1 - 1e-3):
     bound = torch.Tensor([bound])
     temperature = min(-(1 / max_value) * (torch.log1p(-bound) - torch.log(bound)), 1)
     return temperature
-
-
-def notinfnotnan(x: torch.Tensor) -> torch.Tensor:
-    return torch.isfinite(x).all()
 
 
 def gaussian_kde_log_eval(samples, query):

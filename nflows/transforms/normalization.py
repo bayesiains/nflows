@@ -4,8 +4,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import nflows.utils.typechecks as check
 from nflows.transforms.base import InverseNotAvailable, Transform
+import nflows.utils.typechecks as check
 
 # class BatchNorm(Transform):
 #     """Transform that performs batch normalization.

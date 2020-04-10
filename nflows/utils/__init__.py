@@ -8,7 +8,6 @@ from nflows.utils.torchutils import (
     get_temperature,
     logabsdet,
     merge_leading_dims,
-    notinfnotnan,
     random_orthogonal,
     repeat_rows,
     searchsorted,
@@ -24,4 +23,3 @@ from nflows.utils.typechecks import (
     is_positive_int,
     is_power_of_two,
 )
-

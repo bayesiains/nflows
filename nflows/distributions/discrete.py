@@ -3,7 +3,6 @@
 import torch
 from torch.nn import functional as F
 
-import nflows.utils.typechecks as check
 from nflows.distributions.base import Distribution
 from nflows.utils import torchutils
 

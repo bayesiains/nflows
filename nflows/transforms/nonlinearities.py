@@ -32,10 +32,12 @@ class Tanh(Transform):
 
 
 class LogTanh(Transform):
-    """Tanh with unbounded output. Constructed by selecting a cut_point, and replacing values to
-    the right of cut_point with alpha * log(beta * x), and to the left of -cut_point with
-    -alpha * log(-beta * x). alpha and beta are set to match the value and the first derivative of
-    tanh at cut_point."""
+    """Tanh with unbounded output. 
+
+    Constructed by selecting a cut_point, and replacing values to the right of cut_point
+    with alpha * log(beta * x), and to the left of -cut_point with -alpha * log(-beta *
+    x). alpha and beta are set to match the value and the first derivative of tanh at
+    cut_point."""
 
     def __init__(self, cut_point=1):
         if cut_point <= 0:

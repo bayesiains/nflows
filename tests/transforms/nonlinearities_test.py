@@ -4,7 +4,6 @@ import unittest
 
 import torch
 
-import nflows.transforms.splines.quadratic
 from nflows.transforms import nonlinearities as nl
 from nflows.transforms import standard
 from nflows.transforms.base import InputOutsideDomain
