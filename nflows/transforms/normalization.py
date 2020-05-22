@@ -154,7 +154,7 @@ class ActNorm(Transform):
             raise TypeError("Number of features must be a positive integer.")
         super().__init__()
 
-        self.initialized = False
+        self.register_buffer("initialized", torch.zeros(1, dtype=torch.bool))
         self.log_scale = nn.Parameter(torch.zeros(features))
         self.shift = nn.Parameter(torch.zeros(features))
 
@@ -216,4 +216,4 @@ class ActNorm(Transform):
             self.log_scale.data = -torch.log(std)
             self.shift.data = -mu
 
-        self.initialized = True
+        self.initialized[0] = 1
