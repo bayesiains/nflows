@@ -120,6 +120,26 @@ class ActNormTest(TransformTest):
                 self.eps = 1e-6
                 self.assert_forward_inverse_are_consistent(transform, inputs)
 
+    def test_save_load(self):
+        batch_size = 50
+        for shape in [(100,), (32, 8, 8)]:
+            with self.subTest(shape=shape):
+                inputs = torch.randn(batch_size, *shape)  # Test data
+
+                transform = norm.ActNorm(shape[0])
+                outputs1, logabsdet1 = transform.forward(inputs)  # One forward pass to initialize
+                state_dict = transform.state_dict()  # Save state dict
+
+                transform = norm.ActNorm(shape[0])  # Re-initialize transform
+                transform.load_state_dict(state_dict)
+                noise = torch.randn(batch_size, *shape)  # New data to confuse the initialization
+                _ = transform.forward(noise)  # Try to confuse the network
+                outputs2, logabsdet2 = transform.forward(inputs)  # Evaluate on test data
+
+                self.eps = 1e-6
+                self.assertEqual(outputs1, outputs2)
+                self.assertEqual(logabsdet1, logabsdet2)
+
 
 if __name__ == "__main__":
     unittest.main()
