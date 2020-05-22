@@ -126,17 +126,19 @@ class ActNormTest(TransformTest):
             with self.subTest(shape=shape):
                 inputs = torch.randn(batch_size, *shape)  # Test data
 
-                transform = norm.ActNorm(shape[0])
-                outputs1, logabsdet1 = transform.forward(inputs)  # One forward pass to initialize
-                state_dict = transform.state_dict()  # Save state dict
+                transform1 = norm.ActNorm(shape[0])
+                outputs1, logabsdet1 = transform1.forward(inputs)  # One forward pass to initialize
+                state_dict = transform1.state_dict()  # Save state dict
 
-                transform = norm.ActNorm(shape[0])  # Re-initialize transform
-                transform.load_state_dict(state_dict)
+                transform2 = norm.ActNorm(shape[0])  # Re-initialize transform
+                transform2.load_state_dict(state_dict)
                 noise = torch.randn(batch_size, *shape)  # New data to confuse the initialization
-                _ = transform.forward(noise)  # Try to confuse the network
-                outputs2, logabsdet2 = transform.forward(inputs)  # Evaluate on test data
+                _ = transform2.forward(noise)  # Try to confuse the transform
+                outputs2, logabsdet2 = transform2.forward(inputs)  # Evaluate on test data
 
                 self.eps = 1e-6
+                self.assertEqual(transform1.log_scale, transform2.log_scale)
+                self.assertEqual(transform1.shift, transform2.shift)
                 self.assertEqual(outputs1, outputs2)
                 self.assertEqual(logabsdet1, logabsdet2)
 
