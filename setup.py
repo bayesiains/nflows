@@ -6,10 +6,10 @@ setup(
     name="nflows",
     version=__version__,
     description="",
-    url="https://github.com/mackelab/nflows",
-    author="Conor Durkan, Artur Bekasov, George Papamakarios",
+    url="https://github.com/bayesiains/nflows",
+    author="Conor Durkan, Artur Bekasov, George Papamakarios, Iain Murray",
     packages=find_packages(exclude=["tests"]),
-    license="GPLv3",
+    license="MIT",
     install_requires=[
         "matplotlib",
         "numpy",
