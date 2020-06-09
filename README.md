@@ -1,7 +1,14 @@
 ## Description
 `nflows` is a comprehensive collection of [normalizing flows](https://arxiv.org/abs/1912.02762) using [PyTorch](https://pytorch.org).
 
-## Setup
+## Installation
+
+To install from PyPI:
+```
+pip install nflows
+```
+
+### For development
 
 You can install all the dependencies using the `environment.yml` file to create a conda environment: `conda env create -f environment.yml`
 
