@@ -14,6 +14,9 @@ You can install all the dependencies using the `environment.yml` file to create 
 
 Alternatively, you can install via `setup.py` using `pip install -e ".[dev]"` (the `dev` flag installs development and testing dependencies).
 
+## Usage
+
+![diagram.png](https://raw.githubusercontent.com/arashabzd/nflows/better-readme%233/diagram.png "Diagram")
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
