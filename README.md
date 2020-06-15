@@ -26,7 +26,7 @@ To construct a flow you need to inherit from `Flow` class and provide its constr
 
 - `embedding_net` (Optional): An `nn.Module` object that encodes conditioning variable if available. Output of this network is the context that gets fed to the transform and distribution objects.
 
-Additional examples of the workflow are provided in [examples folder].(https://github.com/arashabzd/nflows/tree/better-readme%233/examples)
+Additional examples of the workflow are provided in [examples folder](https://github.com/arashabzd/nflows/tree/better-readme%233/examples).
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
