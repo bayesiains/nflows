@@ -16,8 +16,6 @@ Alternatively, you can install via `setup.py` using `pip install -e ".[dev]"` (t
 
 ## Usage
 
-![diagram.png](https://raw.githubusercontent.com/arashabzd/nflows/better-readme%233/diagram.png "Diagram")
-
 To construct a flow you need to inherit from `Flow` class and provide its constructor with three parameters:
 
 - `transform`: A `Transform` object that can be a composition of several invertible transformations from data to the base distribution. There are a plethora of transformations defined in `nflows.transformations` module (e.x. coupling, autoregressive, spline, ...).
