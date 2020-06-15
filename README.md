@@ -18,6 +18,16 @@ Alternatively, you can install via `setup.py` using `pip install -e ".[dev]"` (t
 
 ![diagram.png](https://raw.githubusercontent.com/arashabzd/nflows/better-readme%233/diagram.png "Diagram")
 
+To construct a flow you need to inherit from `Flow` class and provide its constructor with three parameters:
+
+- `transform`: A `Transform` object that can be a composition of several invertible transformations from data to the base distribution. There are a plethora of transformations defined in `nflows.transformations` module (e.x. coupling, autoregressive, spline, ...).
+
+- `distribution`: A `Distribution` object that specifies the base distribution of flow. Could be a conditional distribution in case any conditioning variable is available. There are several distributions defined in `nflows.distributions` module.
+
+- `embedding_net` (Optional): An `nn.Module` object that encodes conditioning variable if available. Output of this network is the context that gets fed to the transform and distribution objects.
+
+Additional examples of the workflow are provided in [examples folder].(https://github.com/arashabzd/nflows/tree/better-readme%233/examples)
+
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
 > C. Durkan, A. Bekasov, I. Murray, G. Papamakarios, _Neural Spline Flows_, NeurIPS 2019.
