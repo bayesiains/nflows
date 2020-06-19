@@ -8,12 +8,6 @@ To install from PyPI:
 pip install nflows
 ```
 
-### For development
-
-You can install all the dependencies using the `environment.yml` file to create a conda environment: `conda env create -f environment.yml`
-
-Alternatively, you can install via `setup.py` using `pip install -e ".[dev]"` (the `dev` flag installs development and testing dependencies).
-
 ## Usage
 
 To define a flow:
@@ -45,6 +39,18 @@ samples = flow.sample(num_samples)
 ```
 
 Additional examples of the workflow are provided in [examples folder](examples/).
+
+## Development
+
+You can install all the dependencies using the `environment.yml` file to create a conda environment: 
+```
+conda env create -f environment.yml
+```
+
+Alternatively, you can install via `setup.py` (the `dev` flag installs development and testing dependencies):
+```
+pip install -e ".[dev]"
+```
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
