@@ -44,7 +44,7 @@ To sample from the flow:
 samples = flow.sample(num_samples)
 ```
 
-Additional examples of the workflow are provided in [examples folder](https://github.com/arashabzd/nflows/tree/better-readme%233/examples).
+Additional examples of the workflow are provided in [examples folder](examples/).
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
