@@ -16,13 +16,33 @@ Alternatively, you can install via `setup.py` using `pip install -e ".[dev]"` (t
 
 ## Usage
 
-To construct a flow you need to inherit from `Flow` class and provide its constructor with three parameters:
+To define a flow:
 
-- `transform`: A `Transform` object that can be a composition of several invertible transformations from data to the base distribution. There are a plethora of transformations defined in `nflows.transformations` module (e.x. coupling, autoregressive, spline, ...).
+```python
+from nflows import transforms, distributions, flows
 
-- `distribution`: A `Distribution` object that specifies the base distribution of flow. Could be a conditional distribution in case any conditioning variable is available. There are several distributions defined in `nflows.distributions` module.
+# Define an invertible transformation.
+transform = transforms.CompositeTranform([
+    transforms.AffineCouplingTransform(...),
+    transforms.RandomPermutation(...)
+])
 
-- `embedding_net` (Optional): An `nn.Module` object that encodes conditioning variable if available. Output of this network is the context that gets fed to the transform and distribution objects.
+# Define a base distribution.
+base_distribution = distributions.StandardNormal(...)
+
+# Combine into a flow.
+flow = flows.Flow(transform=transform, distribution=base_distribution)
+```
+
+To evaluate log probabilities of inputs:
+```python
+log_prob = flow.log_prob(inputs)
+```
+
+To sample from the flow:
+```python
+samples = flow.sample(num_samples)
+```
 
 Additional examples of the workflow are provided in [examples folder](https://github.com/arashabzd/nflows/tree/better-readme%233/examples).
 
