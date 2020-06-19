@@ -1,3 +1,5 @@
+# nflows
+
 `nflows` is a comprehensive collection of [normalizing flows](https://arxiv.org/abs/1912.02762) using [PyTorch](https://pytorch.org).
 
 ## Installation
