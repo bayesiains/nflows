@@ -14,6 +14,37 @@ You can install all the dependencies using the `environment.yml` file to create 
 
 Alternatively, you can install via `setup.py` using `pip install -e ".[dev]"` (the `dev` flag installs development and testing dependencies).
 
+## Usage
+
+To define a flow:
+
+```python
+from nflows import transforms, distributions, flows
+
+# Define an invertible transformation.
+transform = transforms.CompositeTranform([
+    transforms.AffineCouplingTransform(...),
+    transforms.RandomPermutation(...)
+])
+
+# Define a base distribution.
+base_distribution = distributions.StandardNormal(...)
+
+# Combine into a flow.
+flow = flows.Flow(transform=transform, distribution=base_distribution)
+```
+
+To evaluate log probabilities of inputs:
+```python
+log_prob = flow.log_prob(inputs)
+```
+
+To sample from the flow:
+```python
+samples = flow.sample(num_samples)
+```
+
+Additional examples of the workflow are provided in [examples folder](examples/).
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
