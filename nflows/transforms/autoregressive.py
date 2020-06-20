@@ -5,14 +5,14 @@ import torch
 from torch.nn import functional as F
 
 from nflows.transforms.base import Transform
-import nflows.transforms.made as made_module
+from nflows.transforms import made as made_module
 from nflows.transforms.splines.cubic import cubic_spline
 from nflows.transforms.splines.linear import linear_spline
 from nflows.transforms.splines.quadratic import (
     quadratic_spline,
     unconstrained_quadratic_spline,
 )
-import nflows.transforms.splines.rational_quadratic as rational_quadratic
+from nflows.transforms.splines import rational_quadratic
 from nflows.transforms.splines.rational_quadratic import (
     rational_quadratic_spline,
     unconstrained_rational_quadratic_spline,

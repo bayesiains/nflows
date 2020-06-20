@@ -2,7 +2,6 @@ import unittest
 
 import torch
 
-import nflows.utils.typechecks as check
 from nflows.transforms.reshape import SqueezeTransform
 from tests.transforms.transform_test import TransformTest
 
