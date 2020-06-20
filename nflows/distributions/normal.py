@@ -16,6 +16,11 @@ class StandardNormal(Distribution):
         self._shape = torch.Size(shape)
         self._log_z = 0.5 * np.prod(shape) * np.log(2 * np.pi)
 
+        # A dummy buffer to get device from for sampling.
+        # TODO: Should be made non-persistent, to not pollute the state_dict, once
+        #       https://github.com/pytorch/pytorch/issues/18056 gets to stable.
+        self.register_buffer("_dummy_buffer", torch.empty(0))
+
     def _log_prob(self, inputs, context):
         # Note: the context is ignored.
         if inputs.shape[1:] != self._shape:
@@ -29,11 +34,12 @@ class StandardNormal(Distribution):
 
     def _sample(self, num_samples, context):
         if context is None:
-            return torch.randn(num_samples, *self._shape)
+            return torch.randn(num_samples, *self._shape, device=self._dummy_buffer.device)
         else:
-            # The value of the context is ignored, only its size is taken into account.
+            # The value of the context is ignored, only its size and device are taken into account.
             context_size = context.shape[0]
-            samples = torch.randn(context_size * num_samples, *self._shape)
+            samples = torch.randn(context_size * num_samples, *self._shape,
+                                  device=context.device)
             return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
     def _mean(self, context):
@@ -113,7 +119,7 @@ class ConditionalDiagonalNormal(Distribution):
 
         # Generate samples.
         context_size = context.shape[0]
-        noise = torch.randn(context_size * num_samples, *self._shape)
+        noise = torch.randn(context_size * num_samples, *self._shape, device=means.device)
         samples = means + stds * noise
         return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
