@@ -59,6 +59,14 @@ pip install -e ".[dev]"
 > [[arXiv]](https://arxiv.org/abs/1906.04032) [[bibtex]](https://gpapamak.github.io/bibtex/neural_spline_flows.bib)
 
 
-`nflows` have been used as density estimators for likelihood-free inference in 
-> Conor Durkan, Iain Murray, George Papamakarios, _On Contrastive Learning for Likelihood-free Inference_
+`nflows` has been used in 
+> Conor Durkan, Iain Murray, George Papamakarios, _On Contrastive Learning for Likelihood-free Inference_, ICML 2020.
 > [[arXiv]](https://arxiv.org/abs/2002.03712).
+
+> Artur Bekasov, Iain Murray, _Ordering Dimensions with Nested Dropout Normalizing Flows_.
+> [[arXiv]](https://arxiv.org/abs/2006.08777).
+
+> Tim Dockhorn, James A. Ritchie, Yaoliang Yu, Iain Murray, _Density Deconvolution with Normalizing Flows_.
+> [[arXiv]](https://arxiv.org/abs/2006.09396).
+
+`nflows` is used by the conditional density estimation package [pyknos](https://github.com/mackelab/pyknos), and in turn the likelihood-free inference framework [sbi](https://github.com/mackelab/sbi).
