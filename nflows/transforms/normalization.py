@@ -103,8 +103,8 @@ class BatchNorm(Transform):
 
         if self.training:
             mean, var = inputs.mean(0), inputs.var(0)
-            self.running_mean.mul_(1 - self.momentum).add_(mean * self.momentum)
-            self.running_var.mul_(1 - self.momentum).add_(var * self.momentum)
+            self.running_mean.mul_(1 - self.momentum).add_(mean.detach() * self.momentum)
+            self.running_var.mul_(1 - self.momentum).add_(var.detach() * self.momentum)
         else:
             mean, var = self.running_mean, self.running_var
 
