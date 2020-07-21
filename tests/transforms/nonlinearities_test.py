@@ -108,6 +108,10 @@ class NonlinearitiesTest(TransformTest):
             nl.Sigmoid(),
             nl.Logit(),
             nl.CompositeCDFTransform(nl.Sigmoid(), standard.IdentityTransform()),
+            nl.HiLU(param_shape=[1] + [1, 1, 1]),
+            nl.HiLU(param_shape=[1]+[ shape[0], 1, 1]),
+            nl.HiLU(param_shape=[1] + [shape[0], shape[1], 1]),
+            nl.HiLU(param_shape=[1] + [shape[0], shape[1], shape[2]]),
         ]
         for transform in transforms:
             with self.subTest(transform=transform):
@@ -126,6 +130,10 @@ class NonlinearitiesTest(TransformTest):
             nl.Sigmoid(),
             nl.Logit(),
             nl.CompositeCDFTransform(nl.Sigmoid(), standard.IdentityTransform()),
+            nl.HiLU(param_shape=[1] + [1, 1, 1]),
+            nl.HiLU(param_shape=[1] + [shape[0], 1, 1]),
+            nl.HiLU(param_shape=[1] + [shape[0], shape[1], 1]),
+            nl.HiLU(param_shape=[1] + [shape[0], shape[1], shape[2]]),
         ]
         for transform in transforms:
             with self.subTest(transform=transform):
@@ -144,6 +152,10 @@ class NonlinearitiesTest(TransformTest):
             nl.Sigmoid(),
             nl.Logit(),
             nl.CompositeCDFTransform(nl.Sigmoid(), standard.IdentityTransform()),
+            nl.HiLU(param_shape=[1, 1, 1, 1], init_log_range=2.0),
+            nl.HiLU(param_shape=[1] + [shape[0], 1, 1], init_log_range=2.0),
+            nl.HiLU(param_shape=[1] + [shape[0], shape[1], 1], init_log_range=2.0),
+            nl.HiLU(param_shape=[1] + [shape[0], shape[1], shape[2]], init_log_range=2.0),
         ]
         self.eps = 1e-3
         for transform in transforms:

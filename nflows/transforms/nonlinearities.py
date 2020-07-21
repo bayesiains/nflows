@@ -447,3 +447,53 @@ class PiecewiseRationalQuadraticCDF(Transform):
 
     def inverse(self, inputs, context=None):
         return self._spline(inputs, inverse=True)
+
+class HiLU(Transform):
+
+    def __init__(self, param_shape, init_log_range=0.0):
+        """
+        Hinge Linear Unit
+
+        similar to a PReLU, except that the slope is parameterized separately
+        for both positive and negative inputs/outputs
+        :param param_shape: Tuple of integers - shape of the parameter tensors including batch dim,
+                            must be broadcastable to input/output shape
+        :param init_range: Optional float: Randomize initial (log-scale) parameters by drawing them from a random
+                           uniform in the interval [-init_range, +init_range]
+        """
+        super().__init__()
+        self.param_shape = param_shape
+        self.init_log_range = init_log_range
+        self.pscale = nn.Parameter(torch.zeros(size=param_shape))
+        self.nscale = nn.Parameter(torch.zeros(size=param_shape))
+        if init_log_range>0.0:
+            with torch.no_grad():
+                self.pscale.data.copy_(torch.rand_like(self.pscale) * 2.0 * init_log_range - init_log_range)
+                self.nscale.data.copy_(torch.rand_like(self.nscale) * 2.0 * init_log_range - init_log_range)
+
+    def inverse(self, output, context=None):
+        pscale = self.pscale.exp()
+        nscale = self.nscale.exp()
+        inverse = torch.where(output.ge(0.0), output / pscale, output / nscale)
+        log_grad = -torch.where(output.ge(0.0), self.pscale, self.nscale)
+        jacobian_log_abs_det = torch.sum(log_grad.view((log_grad.shape[0],-1)), dim=1)
+        return inverse, jacobian_log_abs_det
+
+    def forward(self, input, context=None):
+        pscale = self.pscale.exp()
+        nscale = self.nscale.exp()
+        output = torch.where(input.ge(0.0), input * pscale, input * nscale)
+        log_grad = torch.where(input.ge(0.0), self.pscale, self.nscale) # gradient of natural exp function is itself,
+                                                                        # log of that are our parameters
+        jacobian_log_abs_det = torch.sum(log_grad.view((log_grad.shape[0],-1)), dim=1)
+        return output, jacobian_log_abs_det
+
+    def _forward(self, input):
+        pscale = self.pscale.exp()
+        nscale = self.nscale.exp()
+        return torch.where(input.ge(0.0), input * pscale, input * nscale)
+
+    def _inverse(self, output):
+        pscale = self.pscale.exp()
+        nscale = self.nscale.exp()
+        return torch.where(output.ge(0.0), output / pscale, output / nscale)
