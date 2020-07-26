@@ -7,7 +7,7 @@ setup(
     version=__version__,
     description="Normalizing flows in PyTorch.",
     url="https://github.com/bayesiains/nflows",
-    download_url = 'https://github.com/bayesiains/nflows/archive/v0.11.tar.gz',
+    download_url = 'https://github.com/bayesiains/nflows/archive/v0.12.tar.gz',
     author="Conor Durkan, Artur Bekasov, George Papamakarios, Iain Murray",
     packages=find_packages(exclude=["tests"]),
     license="MIT",
