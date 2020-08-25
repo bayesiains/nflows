@@ -30,24 +30,46 @@ class AutoregressiveTransform(Transform):
     forward transform, where D is the dimensionality of the input to the transform.
     """
 
-    def __init__(self, autoregressive_net):
+    def __init__(self, autoregressive_net, fast_direction='forward'):
         super(AutoregressiveTransform, self).__init__()
         self.autoregressive_net = autoregressive_net
+        self.fast_direction = fast_direction
 
     def forward(self, inputs, context=None):
-        autoregressive_params = self.autoregressive_net(inputs, context)
-        outputs, logabsdet = self._elementwise_forward(inputs, autoregressive_params)
+        if self.fast_direction == 'forward':
+            autoregressive_params = self.autoregressive_net(inputs, context)
+            outputs, logabsdet = self._elementwise_forward(inputs, autoregressive_params)
+        elif self.fast_direction == 'inverse':
+            num_inputs = np.prod(inputs.shape[1:])
+            outputs = torch.zeros_like(inputs)
+            logabsdet = None
+            for _ in range(num_inputs):    
+                autoregressive_params = self.autoregressive_net(outputs, context)
+                outputs, logabsdet = self._elementwise_forward(
+                    inputs, autoregressive_params
+                )
+        else:
+            raise NotImplementedError()
+
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
-        num_inputs = np.prod(inputs.shape[1:])
-        outputs = torch.zeros_like(inputs)
-        logabsdet = None
-        for _ in range(num_inputs):
-            autoregressive_params = self.autoregressive_net(outputs, context)
-            outputs, logabsdet = self._elementwise_inverse(
-                inputs, autoregressive_params
-            )
+        if self.fast_direction == 'forward':
+            num_inputs = np.prod(inputs.shape[1:])
+            outputs = torch.zeros_like(inputs)
+            logabsdet = None
+            for _ in range(num_inputs):
+                autoregressive_params = self.autoregressive_net(outputs, context)
+                outputs, logabsdet = self._elementwise_inverse(
+                    inputs, autoregressive_params
+                )
+        elif self.fast_direction == 'inverse':
+            autoregressive_params = self.autoregressive_net(inputs, context)
+            outputs, logabsdet = self._elementwise_inverse(inputs, autoregressive_params)
+
+        else:
+            raise NotImplementedError()
+
         return outputs, logabsdet
 
     def _output_dim_multiplier(self):
@@ -72,6 +94,7 @@ class MaskedAffineAutoregressiveTransform(AutoregressiveTransform):
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
+        fast_direction='forward',
     ):
         self.features = features
         made = made_module.MADE(
@@ -87,7 +110,7 @@ class MaskedAffineAutoregressiveTransform(AutoregressiveTransform):
             use_batch_norm=use_batch_norm,
         )
         self._epsilon = 1e-3
-        super(MaskedAffineAutoregressiveTransform, self).__init__(made)
+        super(MaskedAffineAutoregressiveTransform, self).__init__(made, fast_direction)
 
     def _output_dim_multiplier(self):
         return 2
@@ -140,6 +163,7 @@ class MaskedPiecewiseLinearAutoregressiveTransform(AutoregressiveTransform):
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
+        fast_direction='forward',
     ):
         self.num_bins = num_bins
         self.features = features
@@ -155,7 +179,7 @@ class MaskedPiecewiseLinearAutoregressiveTransform(AutoregressiveTransform):
             dropout_probability=dropout_probability,
             use_batch_norm=use_batch_norm,
         )
-        super().__init__(made)
+        super().__init__(made, fast_direction)
 
     def _output_dim_multiplier(self):
         return self.num_bins
@@ -195,6 +219,7 @@ class MaskedPiecewiseQuadraticAutoregressiveTransform(AutoregressiveTransform):
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
+        fast_direction='forward',
         min_bin_width=rational_quadratic.DEFAULT_MIN_BIN_WIDTH,
         min_bin_height=rational_quadratic.DEFAULT_MIN_BIN_HEIGHT,
         min_derivative=rational_quadratic.DEFAULT_MIN_DERIVATIVE,
@@ -218,7 +243,7 @@ class MaskedPiecewiseQuadraticAutoregressiveTransform(AutoregressiveTransform):
             dropout_probability=dropout_probability,
             use_batch_norm=use_batch_norm,
         )
-        super().__init__(made)
+        super().__init__(made, fast_direction)
 
     def _output_dim_multiplier(self):
         if self.tails == "linear":
@@ -281,6 +306,7 @@ class MaskedPiecewiseCubicAutoregressiveTransform(AutoregressiveTransform):
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
+        fast_direction='forward',
     ):
         self.num_bins = num_bins
         self.features = features
@@ -296,7 +322,7 @@ class MaskedPiecewiseCubicAutoregressiveTransform(AutoregressiveTransform):
             dropout_probability=dropout_probability,
             use_batch_norm=use_batch_norm,
         )
-        super(MaskedPiecewiseCubicAutoregressiveTransform, self).__init__(made)
+        super(MaskedPiecewiseCubicAutoregressiveTransform, self).__init__(made, fast_direction)
 
     def _output_dim_multiplier(self):
         return self.num_bins * 2 + 2
@@ -350,6 +376,7 @@ class MaskedPiecewiseRationalQuadraticAutoregressiveTransform(AutoregressiveTran
         activation=F.relu,
         dropout_probability=0.0,
         use_batch_norm=False,
+        fast_direction='forward',
         min_bin_width=rational_quadratic.DEFAULT_MIN_BIN_WIDTH,
         min_bin_height=rational_quadratic.DEFAULT_MIN_BIN_HEIGHT,
         min_derivative=rational_quadratic.DEFAULT_MIN_DERIVATIVE,
@@ -374,7 +401,7 @@ class MaskedPiecewiseRationalQuadraticAutoregressiveTransform(AutoregressiveTran
             use_batch_norm=use_batch_norm,
         )
 
-        super().__init__(autoregressive_net)
+        super().__init__(autoregressive_net, fast_direction)
 
     def _output_dim_multiplier(self):
         if self.tails == "linear":
