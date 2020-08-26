@@ -3,32 +3,61 @@ from typing import Union
 import torch
 from torch import distributions
 
+from nflows.distributions.base import Distribution
+from nflows.utils import torchutils
 
-class BoxUniform(distributions.Independent):
+
+class BoxUniform(Distribution):
     def __init__(
         self,
         low: Union[torch.Tensor, float],
-        high: Union[torch.Tensor, float],
-        reinterpreted_batch_ndims: int = 1,
+        high: Union[torch.Tensor, float]    
     ):
         """Multidimensionqal uniform distribution defined on a box.
-        
-        A `Uniform` distribution initialized with e.g. a parameter vector low or high of length 3 will result in a /batch/ dimension of length 3. A log_prob evaluation will then output three numbers, one for each of the independent Uniforms in the batch. Instead, a `BoxUniform` initialized in the same way has three /event/ dimensions, and returns a scalar log_prob corresponding to whether the evaluated point is in the box defined by low and high or outside. 
-    
-        Refer to torch.distributions.Uniform and torch.distributions.Independent for further documentation.
-    
+            
         Args:
             low (Tensor or float): lower range (inclusive).
             high (Tensor or float): upper range (exclusive).
             reinterpreted_batch_ndims (int): the number of batch dims to
                                              reinterpret as event dims.
         """
+        super().__init__()
+        if low.shape != high.shape:
+            raise ValueError(
+                "low and high are not of the same size"
+            )
 
-        super().__init__(
-            distributions.Uniform(low=low, high=high), reinterpreted_batch_ndims
-        )
+        if not (low < high).byte().all():
+            raise ValueError(
+                "low has elements that are higher than high"
+            )
 
+        self._shape = low.shape
+        self._low = low
+        self._high = high
+        self._log_prob_value = -torch.sum(torch.log(high - low))
 
+    def _log_prob(self, inputs, context):
+        # Note: the context is ignored.
+        if inputs.shape[1:] != self._shape:
+            raise ValueError(
+                "Expected input of shape {}, got {}".format(
+                    self._shape, inputs.shape[1:]
+                )
+            )
+        return self._log_prob_value.expand(inputs.shape[0])
+
+    def _sample(self, num_samples, context):   
+        context_size = 1 if context is None else context.shape[0]
+        low_expanded =  self._low.expand(context_size  * num_samples, *self._shape)
+        high_expanded = self._high.expand(context_size * num_samples, *self._shape)
+        samples = low_expanded + torch.rand(context_size * num_samples, *self._shape)*(high_expanded - low_expanded)
+
+        if context is None:
+            return samples
+        else:
+            return torchutils.split_leading_dim(samples, [context_size, num_samples])
+        
 class MG1Uniform(distributions.Uniform):
     def log_prob(self, value):
         return super().log_prob(self._to_noise(value))
