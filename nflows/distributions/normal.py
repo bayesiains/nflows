@@ -6,6 +6,7 @@ from torch import nn
 
 from nflows.distributions.base import Distribution
 from nflows.utils import torchutils
+from torch._C import dtype
 
 
 class StandardNormal(Distribution):
@@ -14,12 +15,11 @@ class StandardNormal(Distribution):
     def __init__(self, shape):
         super().__init__()
         self._shape = torch.Size(shape)
-        self._log_z = 0.5 * np.prod(shape) * np.log(2 * np.pi)
 
-        # A dummy buffer to get device from for sampling.
-        # TODO: Should be made non-persistent, to not pollute the state_dict, once
-        #       https://github.com/pytorch/pytorch/issues/18056 gets to stable.
-        self.register_buffer("_dummy_buffer", torch.empty(0))
+        self.register_buffer("_log_z",
+                             torch.tensor(0.5 * np.prod(shape) * np.log(2 * np.pi),
+                                          dtype=torch.float64),
+                             persistent=False)
 
     def _log_prob(self, inputs, context):
         # Note: the context is ignored.
@@ -29,12 +29,13 @@ class StandardNormal(Distribution):
                     self._shape, inputs.shape[1:]
                 )
             )
-        neg_energy = -0.5 * torchutils.sum_except_batch(inputs ** 2, num_batch_dims=1)
+        neg_energy = -0.5 * \
+            torchutils.sum_except_batch(inputs ** 2, num_batch_dims=1)
         return neg_energy - self._log_z
 
     def _sample(self, num_samples, context):
         if context is None:
-            return torch.randn(num_samples, *self._shape, device=self._dummy_buffer.device)
+            return torch.randn(num_samples, *self._shape, device=self._log_z.device)
         else:
             # The value of the context is ignored, only its size and device are taken into account.
             context_size = context.shape[0]
@@ -67,7 +68,10 @@ class ConditionalDiagonalNormal(Distribution):
             self._context_encoder = lambda x: x
         else:
             self._context_encoder = context_encoder
-        self._log_z = 0.5 * np.prod(shape) * np.log(2 * np.pi)
+        self.register_buffer("_log_z",
+                             torch.tensor(0.5 * np.prod(shape) * np.log(2 * np.pi),
+                                          dtype=torch.float64),
+                             persistent=False)
 
     def _compute_params(self, context):
         """Compute the means and log stds form the context."""
@@ -119,7 +123,8 @@ class ConditionalDiagonalNormal(Distribution):
 
         # Generate samples.
         context_size = context.shape[0]
-        noise = torch.randn(context_size * num_samples, *self._shape, device=means.device)
+        noise = torch.randn(context_size * num_samples, *
+                            self._shape, device=means.device)
         samples = means + stds * noise
         return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
@@ -147,7 +152,10 @@ class DiagonalNormal(Distribution):
         #     self._context_encoder = context_encoder
         self.mean_ = nn.Parameter(torch.zeros(shape).reshape(1, -1))
         self.log_std_ = nn.Parameter(torch.zeros(shape).reshape(1, -1))
-        self._log_z = 0.5 * np.prod(shape) * np.log(2 * np.pi)
+        self.register_buffer("_log_z",
+                             torch.tensor(0.5 * np.prod(shape) * np.log(2 * np.pi),
+                                          dtype=torch.float64),
+                             persistent=False)
 
     # def _compute_params(self, context):
     #     """Compute the means and log stds form the context."""
@@ -198,7 +206,9 @@ class DiagonalNormal(Distribution):
 
         # Generate samples.
         context_size = context.shape[0]
-        noise = torch.randn(context_size * num_samples, *self._shape)
+        noise = torch.randn(context_size * num_samples, 
+                            *self._shape, 
+                            device=means.device)
         samples = means + stds * noise
         return torchutils.split_leading_dim(samples, [context_size, num_samples])
 
