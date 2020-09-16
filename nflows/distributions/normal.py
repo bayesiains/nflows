@@ -6,7 +6,6 @@ from torch import nn
 
 from nflows.distributions.base import Distribution
 from nflows.utils import torchutils
-from torch._C import dtype
 
 
 class StandardNormal(Distribution):
