@@ -44,10 +44,10 @@ class StandardNormal(Distribution):
 
     def _mean(self, context):
         if context is None:
-            return torch.zeros(self._shape)
+            return self._log_z.new_zeros(self._shape)
         else:
             # The value of the context is ignored, only its size is taken into account.
-            return torch.zeros(context.shape[0], *self._shape)
+            return context.new_zeros(context.shape[0], *self._shape)
 
 
 class ConditionalDiagonalNormal(Distribution):
