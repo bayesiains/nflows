@@ -58,7 +58,7 @@ class AffineScalarTransformTest(TransformTest):
                 )
 
         self.eps = 1e-6
-        test_case(None, 2.0, inputs + 2.0, 0)
+        test_case(None, 2.0, inputs + 2.0, 0.)
         test_case(2.0, None, inputs * 2.0, np.log(2.0))
         test_case(2.0, 2.0, inputs * 2.0 + 2.0, np.log(2.0))
 
@@ -79,7 +79,7 @@ class AffineScalarTransformTest(TransformTest):
                 )
 
         self.eps = 1e-6
-        test_case(None, 2.0, inputs - 2.0, 0)
+        test_case(None, 2.0, inputs - 2.0, 0.)
         test_case(2.0, None, inputs / 2.0, -np.log(2.0))
         test_case(2.0, 2.0, (inputs - 2.0) / 2.0, -np.log(2.0))
 
