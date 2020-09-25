@@ -45,7 +45,7 @@ class CompositeTransform(Transform):
     def _cascade(inputs, funcs, context):
         batch_size = inputs.shape[0]
         outputs = inputs
-        total_logabsdet = torch.zeros(batch_size)
+        total_logabsdet = torch.zeros(batch_size, device=inputs.device)
         for func in funcs:
             outputs, logabsdet = func(outputs, context)
             total_logabsdet += logabsdet

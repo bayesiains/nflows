@@ -14,7 +14,7 @@ class IdentityTransform(Transform):
 
     def forward(self, inputs: Tensor, context=Optional[Tensor]):
         batch_size = inputs.size(0)
-        logabsdet = torch.zeros(batch_size)
+        logabsdet = torch.zeros(batch_size, device=inputs.device)
         return inputs, logabsdet
 
     def inverse(self, inputs: Tensor, context=Optional[Tensor]):
