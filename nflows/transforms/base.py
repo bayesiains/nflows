@@ -45,7 +45,7 @@ class CompositeTransform(Transform):
     def _cascade(inputs, funcs, context):
         batch_size = inputs.shape[0]
         outputs = inputs
-        total_logabsdet = torch.zeros(batch_size)
+        total_logabsdet = inputs.new_zeros(batch_size)
         for func in funcs:
             outputs, logabsdet = func(outputs, context)
             total_logabsdet += logabsdet
@@ -163,7 +163,7 @@ class MultiscaleCompositeTransform(Transform):
             yield outputs, logabsdet
 
         all_outputs = []
-        total_logabsdet = torch.zeros(batch_size)
+        total_logabsdet = inputs.new_zeros(batch_size)
 
         for outputs, logabsdet in cascade():
             all_outputs.append(outputs.reshape(batch_size, -1))
@@ -194,7 +194,7 @@ class MultiscaleCompositeTransform(Transform):
             split_inputs.append(flat_input.view(-1, *self._output_shapes[i]))
         rev_split_inputs = split_inputs[::-1]
 
-        total_logabsdet = torch.zeros(batch_size)
+        total_logabsdet = inputs.new_zeros(batch_size)
 
         # We don't do the splitting for the last (here first) transform.
         hiddens, logabsdet = rev_inv_transforms[0](rev_split_inputs[0], context)

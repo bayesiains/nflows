@@ -83,7 +83,7 @@ class HouseholderSequence(Transform):
             temp = torch.ger(temp, (2.0 / squared_norm) * q_vector)  # Outer product.
             outputs = outputs - temp
         batch_size = inputs.shape[0]
-        logabsdet = torch.zeros(batch_size)
+        logabsdet = inputs.new_zeros(batch_size)
         return outputs, logabsdet
 
     def forward(self, inputs, context=None):

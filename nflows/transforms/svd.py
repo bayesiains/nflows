@@ -69,7 +69,7 @@ class SVDLinear(Linear):
         )  # Ignore logabsdet as we know it's zero.
         outputs += self.bias
 
-        logabsdet = self.logabsdet() * torch.ones(outputs.shape[0])
+        logabsdet = self.logabsdet() * outputs.new_ones(outputs.shape[0])
 
         return outputs, logabsdet
 
@@ -91,7 +91,7 @@ class SVDLinear(Linear):
             outputs
         )  # Ignore logabsdet since we know it's zero.
         logabsdet = -self.logabsdet()
-        logabsdet = logabsdet * torch.ones(outputs.shape[0])
+        logabsdet = logabsdet * outputs.new_ones(outputs.shape[0])
         return outputs, logabsdet
 
     def weight(self):
@@ -125,21 +125,3 @@ class SVDLinear(Linear):
             D = num of features
         """
         return torch.sum(self.log_diagonal)
-
-
-def main():
-    batch_size = 1
-    features = 5
-    inputs = torch.randn(batch_size, features)
-    # inputs = torch.zeros(batch_size, features)
-    # inputs[0, 0] += 1
-    transform = SVDLinear(features, num_householder=4)
-    outputs, logabsdet = transform(inputs)
-    identity, _ = transforms.InverseTransform(transform)(outputs)
-    print(inputs)
-    print(outputs)
-    print(identity)
-
-
-if __name__ == "__main__":
-    main()

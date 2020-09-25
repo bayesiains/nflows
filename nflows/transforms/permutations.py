@@ -35,7 +35,7 @@ class Permutation(Transform):
             )
         batch_size = inputs.shape[0]
         outputs = torch.index_select(inputs, dim, permutation)
-        logabsdet = torch.zeros(batch_size)
+        logabsdet = inputs.new_zeros(batch_size)
         return outputs, logabsdet
 
     def forward(self, inputs, context=None):
