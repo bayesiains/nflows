@@ -133,7 +133,7 @@ class ConditionalDiagonalNormal(Distribution):
 
 
 class DiagonalNormal(Distribution):
-    """A diagonal multivariate Normal whose parameters are functions of a context."""
+    """A diagonal multivariate Normal with trainable parameters."""
 
     def __init__(self, shape):
         """Constructor.
@@ -145,34 +145,12 @@ class DiagonalNormal(Distribution):
         """
         super().__init__()
         self._shape = torch.Size(shape)
-        # if context_encoder is None:
-        #     self._context_encoder = lambda x: x
-        # else:
-        #     self._context_encoder = context_encoder
         self.mean_ = nn.Parameter(torch.zeros(shape).reshape(1, -1))
         self.log_std_ = nn.Parameter(torch.zeros(shape).reshape(1, -1))
         self.register_buffer("_log_z",
                              torch.tensor(0.5 * np.prod(shape) * np.log(2 * np.pi),
                                           dtype=torch.float64),
                              persistent=False)
-
-    # def _compute_params(self, context):
-    #     """Compute the means and log stds form the context."""
-    #     if context is None:
-    #         raise ValueError('Context can\'t be None.')
-    #
-    #     params = self._context_encoder(context)
-    #     if params.shape[-1] % 2 != 0:
-    #         raise RuntimeError(
-    #             'The context encoder must return a tensor whose last dimension is even.')
-    #     if params.shape[0] != context.shape[0]:
-    #         raise RuntimeError(
-    #             'The batch dimension of the parameters is inconsistent with the input.')
-    #
-    #     split = params.shape[-1] // 2
-    #     means = params[..., :split].reshape(params.shape[0], *self._shape)
-    #     log_stds = params[..., split:].reshape(params.shape[0], *self._shape)
-    #     return means, log_stds
 
     def _log_prob(self, inputs, context):
         if inputs.shape[1:] != self._shape:
@@ -185,7 +163,6 @@ class DiagonalNormal(Distribution):
         # Compute parameters.
         means = self.mean_
         log_stds = self.log_std_
-        # assert means.shape == inputs.shape and log_stds.shape == inputs.shape
 
         # Compute log prob.
         norm_inputs = (inputs - means) * torch.exp(-log_stds)
@@ -197,19 +174,7 @@ class DiagonalNormal(Distribution):
         return log_prob
 
     def _sample(self, num_samples, context):
-        # Compute parameters.
-        means, log_stds = self._compute_params(context)
-        stds = torch.exp(log_stds)
-        means = torchutils.repeat_rows(means, num_samples)
-        stds = torchutils.repeat_rows(stds, num_samples)
-
-        # Generate samples.
-        context_size = context.shape[0]
-        noise = torch.randn(context_size * num_samples, 
-                            *self._shape, 
-                            device=means.device)
-        samples = means + stds * noise
-        return torchutils.split_leading_dim(samples, [context_size, num_samples])
+        raise NotImplementedError()
 
     def _mean(self, context):
         return self.mean
