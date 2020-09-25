@@ -46,7 +46,7 @@ class SqueezeTransform(Transform):
             w // self.factor,
         )
 
-        return inputs, torch.zeros(batch_size)
+        return inputs, inputs.new_zeros(batch_size)
 
     def inverse(self, inputs, context=None):
         if inputs.dim() != 4:
@@ -65,4 +65,4 @@ class SqueezeTransform(Transform):
             batch_size, c // self.factor ** 2, h * self.factor, w * self.factor
         )
 
-        return inputs, torch.zeros(batch_size)
+        return inputs, inputs.new_zeros(batch_size)

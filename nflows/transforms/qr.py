@@ -35,7 +35,7 @@ class QRLinear(Linear):
         init.constant_(self.bias, 0.0)
 
     def _create_upper(self):
-        upper = torch.zeros(self.features, self.features)
+        upper = self.upper_entries.new_zeros(self.features, self.features)
         upper[self.upper_indices[0], self.upper_indices[1]] = self.upper_entries
         upper[self.diag_indices[0], self.diag_indices[1]] = torch.exp(
             self.log_upper_diag
@@ -57,7 +57,7 @@ class QRLinear(Linear):
         outputs, _ = self.orthogonal(outputs)  # Ignore logabsdet as we know it's zero.
         outputs += self.bias
 
-        logabsdet = self.logabsdet() * torch.ones(outputs.shape[0])
+        logabsdet = self.logabsdet() * outputs.new_ones(outputs.shape[0])
 
         return outputs, logabsdet
 
@@ -78,7 +78,7 @@ class QRLinear(Linear):
         outputs, _ = torch.triangular_solve(outputs.t(), upper, upper=True)
         outputs = outputs.t()
         logabsdet = -self.logabsdet()
-        logabsdet = logabsdet * torch.ones(outputs.shape[0])
+        logabsdet = logabsdet * outputs.new_ones(outputs.shape[0])
         return outputs, logabsdet
 
     def weight(self):

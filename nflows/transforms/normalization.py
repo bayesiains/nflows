@@ -113,7 +113,7 @@ class BatchNorm(Transform):
         )
 
         logabsdet_ = torch.log(self.weight) - 0.5 * torch.log(var + self.eps)
-        logabsdet = torch.sum(logabsdet_) * torch.ones(inputs.shape[0])
+        logabsdet = torch.sum(logabsdet_) * inputs.new_ones(inputs.shape[0])
 
         return outputs, logabsdet
 
@@ -136,7 +136,7 @@ class BatchNorm(Transform):
         logabsdet_ = -torch.log(self.weight) + 0.5 * torch.log(
             self.running_var + self.eps
         )
-        logabsdet = torch.sum(logabsdet_) * torch.ones(inputs.shape[0])
+        logabsdet = torch.sum(logabsdet_) * inputs.new_ones(inputs.shape[0])
 
         return outputs, logabsdet
 
@@ -180,10 +180,10 @@ class ActNorm(Transform):
 
         if inputs.dim() == 4:
             batch_size, _, h, w = inputs.shape
-            logabsdet = h * w * torch.sum(self.log_scale) * torch.ones(batch_size)
+            logabsdet = h * w * torch.sum(self.log_scale) * outputs.new_ones(batch_size)
         else:
             batch_size, _ = inputs.shape
-            logabsdet = torch.sum(self.log_scale) * torch.ones(batch_size)
+            logabsdet = torch.sum(self.log_scale) * outputs.new_ones(batch_size)
 
         return outputs, logabsdet
 
@@ -196,10 +196,10 @@ class ActNorm(Transform):
 
         if inputs.dim() == 4:
             batch_size, _, h, w = inputs.shape
-            logabsdet = -h * w * torch.sum(self.log_scale) * torch.ones(batch_size)
+            logabsdet = -h * w * torch.sum(self.log_scale) * outputs.new_ones(batch_size)
         else:
             batch_size, _ = inputs.shape
-            logabsdet = -torch.sum(self.log_scale) * torch.ones(batch_size)
+            logabsdet = -torch.sum(self.log_scale) * outputs.new_ones(batch_size)
 
         return outputs, logabsdet
 
