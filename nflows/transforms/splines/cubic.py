@@ -39,22 +39,23 @@ def unconstrained_cubic_spline(
     else:
         raise RuntimeError("{} tails are not implemented.".format(tails))
 
-    outputs[inside_interval_mask], logabsdet[inside_interval_mask] = cubic_spline(
-        inputs=inputs[inside_interval_mask],
-        unnormalized_widths=unnormalized_widths[inside_interval_mask, :],
-        unnormalized_heights=unnormalized_heights[inside_interval_mask, :],
-        unnorm_derivatives_left=unnorm_derivatives_left[inside_interval_mask, :],
-        unnorm_derivatives_right=unnorm_derivatives_right[inside_interval_mask, :],
-        inverse=inverse,
-        left=-tail_bound,
-        right=tail_bound,
-        bottom=-tail_bound,
-        top=tail_bound,
-        min_bin_width=min_bin_width,
-        min_bin_height=min_bin_height,
-        eps=eps,
-        quadratic_threshold=quadratic_threshold,
-    )
+    if torch.any(inside_interval_mask):
+        outputs[inside_interval_mask], logabsdet[inside_interval_mask] = cubic_spline(
+            inputs=inputs[inside_interval_mask],
+            unnormalized_widths=unnormalized_widths[inside_interval_mask, :],
+            unnormalized_heights=unnormalized_heights[inside_interval_mask, :],
+            unnorm_derivatives_left=unnorm_derivatives_left[inside_interval_mask, :],
+            unnorm_derivatives_right=unnorm_derivatives_right[inside_interval_mask, :],
+            inverse=inverse,
+            left=-tail_bound,
+            right=tail_bound,
+            bottom=-tail_bound,
+            top=tail_bound,
+            min_bin_width=min_bin_width,
+            min_bin_height=min_bin_height,
+            eps=eps,
+            quadratic_threshold=quadratic_threshold,
+        )
 
     return outputs, logabsdet
 

@@ -21,15 +21,16 @@ def unconstrained_linear_spline(
     else:
         raise RuntimeError("{} tails are not implemented.".format(tails))
 
-    outputs[inside_interval_mask], logabsdet[inside_interval_mask] = linear_spline(
-        inputs=inputs[inside_interval_mask],
-        unnormalized_pdf=unnormalized_pdf[inside_interval_mask, :],
-        inverse=inverse,
-        left=-tail_bound,
-        right=tail_bound,
-        bottom=-tail_bound,
-        top=tail_bound,
-    )
+    if torch.any(inside_interval_mask):
+        outputs[inside_interval_mask], logabsdet[inside_interval_mask] = linear_spline(
+            inputs=inputs[inside_interval_mask],
+            unnormalized_pdf=unnormalized_pdf[inside_interval_mask, :],
+            inverse=inverse,
+            left=-tail_bound,
+            right=tail_bound,
+            bottom=-tail_bound,
+            top=tail_bound,
+        )
 
     return outputs, logabsdet
 
