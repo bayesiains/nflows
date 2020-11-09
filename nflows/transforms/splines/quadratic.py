@@ -35,18 +35,19 @@ def unconstrained_quadratic_spline(
     else:
         raise RuntimeError("{} tails are not implemented.".format(tails))
 
-    outputs[inside_interval_mask], logabsdet[inside_interval_mask] = quadratic_spline(
-        inputs=inputs[inside_interval_mask],
-        unnormalized_widths=unnormalized_widths[inside_interval_mask, :],
-        unnormalized_heights=unnormalized_heights[inside_interval_mask, :],
-        inverse=inverse,
-        left=-tail_bound,
-        right=tail_bound,
-        bottom=-tail_bound,
-        top=tail_bound,
-        min_bin_width=min_bin_width,
-        min_bin_height=min_bin_height,
-    )
+    if torch.any(inside_interval_mask):
+        outputs[inside_interval_mask], logabsdet[inside_interval_mask] = quadratic_spline(
+            inputs=inputs[inside_interval_mask],
+            unnormalized_widths=unnormalized_widths[inside_interval_mask, :],
+            unnormalized_heights=unnormalized_heights[inside_interval_mask, :],
+            inverse=inverse,
+            left=-tail_bound,
+            right=tail_bound,
+            bottom=-tail_bound,
+            top=tail_bound,
+            min_bin_width=min_bin_width,
+            min_bin_height=min_bin_height,
+        )
 
     return outputs, logabsdet
 
