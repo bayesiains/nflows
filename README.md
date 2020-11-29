@@ -65,7 +65,7 @@ To cite the package:
                   Artur Bekasov and
                   Iain Murray and
                   George Papamakarios},
-  title        = {nflows: normalizing flows in {PyTorch},
+  title        = {{nflows}: normalizing flows in {PyTorch},
   month        = nov,
   year         = 2020,
   publisher    = {Zenodo},
@@ -75,7 +75,7 @@ To cite the package:
 }
 ```
 
-The version number is intended to be the one from `nflows/version.py`, and the year/month correspond to the date of the release. BibTeX entries for other versions could be found on [Zenodo](https://doi.org/10.5281/zenodo.4296286).
+The version number is intended to be the one from `nflows/version.py`. The year/month correspond to the date of the release. BibTeX entries for other versions could be found on [Zenodo](https://doi.org/10.5281/zenodo.4296286).
 
 If you're using spline-based flows in particular, consider citing the _Neural Spline Flows_ paper: [[bibtex]](https://gpapamak.github.io/bibtex/neural_spline_flows.bib).
 
