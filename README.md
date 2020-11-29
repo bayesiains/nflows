@@ -1,5 +1,7 @@
 # nflows
 
+<a href="https://doi.org/10.5281/zenodo.4296287"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4296287.svg" alt="DOI"></a>
+
 `nflows` is a comprehensive collection of [normalizing flows](https://arxiv.org/abs/1912.02762) using [PyTorch](https://pytorch.org).
 
 ## Installation
@@ -53,6 +55,29 @@ Alternatively, you can install via `setup.py` (the `dev` flag installs developme
 ```
 pip install -e ".[dev]"
 ```
+
+## Citing nflows
+
+To cite the package:
+```bibtex
+@software{nflows,
+  author       = {Conor Durkan and
+                  Artur Bekasov and
+                  Iain Murray and
+                  George Papamakarios},
+  title        = {nflows: normalizing flows in {PyTorch},
+  month        = nov,
+  year         = 2020,
+  publisher    = {Zenodo},
+  version      = {v0.14},
+  doi          = {10.5281/zenodo.4296287},
+  url          = {https://doi.org/10.5281/zenodo.4296287}
+}
+```
+
+The version number is intended to be the one from `nflows/version.py`, and the year/month correspond to the date of the release. BibTeX entries for other versions could be found on [Zenodo](https://doi.org/10.5281/zenodo.4296286).
+
+If you're using spline-based flows in particular, consider citing the _Neural Spline Flows_ paper: [[bibtex]](https://gpapamak.github.io/bibtex/neural_spline_flows.bib).
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
