@@ -65,7 +65,7 @@ To cite the package:
                   Artur Bekasov and
                   Iain Murray and
                   George Papamakarios},
-  title        = {{nflows}: normalizing flows in {PyTorch},
+  title        = {{nflows}: normalizing flows in {PyTorch}},
   month        = nov,
   year         = 2020,
   publisher    = {Zenodo},
