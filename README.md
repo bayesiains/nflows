@@ -77,12 +77,12 @@ To cite the package:
 
 The version number is intended to be the one from `nflows/version.py`. The year/month correspond to the date of the release. BibTeX entries for other versions could be found on [Zenodo](https://doi.org/10.5281/zenodo.4296286).
 
-If you're using spline-based flows in particular, consider citing the _Neural Spline Flows_ paper: [[bibtex]](https://gpapamak.github.io/bibtex/neural_spline_flows.bib).
+If you're using spline-based flows in particular, consider citing the _Neural Spline Flows_ paper: [[bibtex]](https://papers.nips.cc/paper/2019/file/7ac71d433f282034e088473244df8c02-Bibtex.bib).
 
 ## References
 `nflows` is derived from [bayesiains/nsf](https://github.com/bayesiains/nsf) originally published with
 > C. Durkan, A. Bekasov, I. Murray, G. Papamakarios, _Neural Spline Flows_, NeurIPS 2019.
-> [[arXiv]](https://arxiv.org/abs/1906.04032) [[bibtex]](https://gpapamak.github.io/bibtex/neural_spline_flows.bib)
+> [[arXiv]](https://arxiv.org/abs/1906.04032) [[bibtex]](https://papers.nips.cc/paper/2019/file/7ac71d433f282034e088473244df8c02-Bibtex.bib)
 
 
 `nflows` has been used in 
