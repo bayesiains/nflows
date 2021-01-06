@@ -21,6 +21,7 @@ dependencies:
   - pip:
     - torchtestcase
     - -e .  # install package in development mode
+    - umnn
   - pytest
   - python
   - pytorch
