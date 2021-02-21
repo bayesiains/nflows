@@ -114,6 +114,24 @@ class MaskedPiecewiseQuadraticAutoregressiveTranformTest(TransformTest):
         self.assert_forward_inverse_are_consistent(transform, inputs)
 
 
+class MaskedUMNNAutoregressiveTranformTest(TransformTest):
+    def test_forward_inverse_are_consistent(self):
+        batch_size = 10
+        features = 20
+        inputs = torch.rand(batch_size, features)
+        self.eps = 1e-4
+
+        transform = autoregressive.MaskedUMNNAutoregressiveTransform(
+            cond_size=10,
+            features=features,
+            hidden_features=30,
+            num_blocks=5,
+            use_residual_blocks=True,
+        )
+
+        self.assert_forward_inverse_are_consistent(transform, inputs)
+
+
 class MaskedPiecewiseCubicAutoregressiveTranformTest(TransformTest):
     def test_forward_inverse_are_consistent(self):
         batch_size = 10

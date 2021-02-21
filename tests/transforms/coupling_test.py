@@ -112,6 +112,53 @@ class AdditiveTransformTest(TransformTest):
                 self.assert_forward_inverse_are_consistent(transform, inputs)
 
 
+class UMNNTransformTest(TransformTest):
+    shapes = [[20], [2, 4, 4]]
+
+    def test_forward(self):
+        for shape in self.shapes:
+            inputs = torch.randn(batch_size, *shape)
+            transform, mask = create_coupling_transform(
+                coupling.UMNNCouplingTransform, shape, integrand_net_layers=[50, 50, 50],
+                cond_size=20,
+                nb_steps=20,
+                solver="CC"
+            )
+            outputs, logabsdet = transform(inputs)
+            with self.subTest(shape=shape):
+                self.assert_tensor_is_good(outputs, [batch_size] + shape)
+                self.assert_tensor_is_good(logabsdet, [batch_size])
+                self.assertEqual(outputs[:, mask <= 0, ...], inputs[:, mask <= 0, ...])
+
+    def test_inverse(self):
+        for shape in self.shapes:
+            inputs = torch.randn(batch_size, *shape)
+            transform, mask = create_coupling_transform(
+                coupling.UMNNCouplingTransform, shape, integrand_net_layers=[50, 50, 50],
+                cond_size=20,
+                nb_steps=20,
+                solver="CC"
+            )
+            outputs, logabsdet = transform(inputs)
+            with self.subTest(shape=shape):
+                self.assert_tensor_is_good(outputs, [batch_size] + shape)
+                self.assert_tensor_is_good(logabsdet, [batch_size])
+                self.assertEqual(outputs[:, mask <= 0, ...], inputs[:, mask <= 0, ...])
+
+    def test_forward_inverse_are_consistent(self):
+        self.eps = 1e-6
+        for shape in self.shapes:
+            inputs = torch.randn(batch_size, *shape)
+            transform, mask = create_coupling_transform(
+                coupling.UMNNCouplingTransform, shape, integrand_net_layers=[50, 50, 50],
+                cond_size=20,
+                nb_steps=20,
+                solver="CC"
+            )
+            with self.subTest(shape=shape):
+                self.assert_forward_inverse_are_consistent(transform, inputs)
+
+
 class PiecewiseCouplingTransformTest(TransformTest):
     classes = [
         coupling.PiecewiseLinearCouplingTransform,
