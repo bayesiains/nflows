@@ -22,7 +22,7 @@ on:
 
 jobs:
   test:
-	name: Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ github.event_name }} 
+    name: Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ github.event_name }} 
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
