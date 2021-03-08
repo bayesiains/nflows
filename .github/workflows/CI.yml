@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - testing
     paths:
       - 'tests/**'
       - 'nflows/**'
