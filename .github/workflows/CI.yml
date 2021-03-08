@@ -46,14 +46,14 @@ jobs:
         run: |
             python -m pip install --upgrade pip wheel
             pip install wheel
-      - name: "Install pytorch stable"
-        if: ${{ matrix.pytorch-version }} == "1.8"
+      - if: matrix.pytorch-version == '1.8'
+        name: "Install pytorch 1.8"
         run: pip install torch==1.8.0+cpu torchvision==0.9.0+cpu torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html
-      - name: "Install pytorch 1.7"
-        if: ${{ matrix.pytorch-version }} == "1.7"
+      - if: matrix.pytorch-version == '1.7'
+        name: "Install pytorch 1.7"
         run: pip install torch==1.7.1+cpu torchvision==0.8.2+cpu torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
-      - name: "Install pytorch 1.6"
-        if: ${{ matrix.pytorch-version }} == "1.6"
+      - if: matrix.pytorch-version == '1.6'
+        name: "Install pytorch 1.6"
         run: pip install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: "Install package"
         run: python setup.py install
