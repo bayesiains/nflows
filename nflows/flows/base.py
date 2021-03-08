@@ -53,7 +53,11 @@ class Flow(Distribution):
         if self._context_used_in_base:
             noise = self._distribution.sample(num_samples, context=embedded_context)
         else:
-            noise = self._distribution.sample(num_samples)
+            repeat_noise = self._distribution.sample(num_samples*embedded_context.shape[0])
+            noise = torch.reshape(
+                    repeat_noise,
+                    (embedded_context.shape[0], -1, repeat_noise.shape[1])
+                    )
 
         if embedded_context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
