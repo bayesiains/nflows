@@ -55,7 +55,8 @@ class TestPiecewiseCDF(TransformTest):
                 self.eps = 1e-5
                 self.assertEqual(outputs, inputs)
 
-    @unittest.skip()
+    @unittest.skipIf(torch.__version__ < (1, 7),
+                     "broken in earlier PyTorch versions")
     def test_forward_inverse_are_consistent(self):
         for transform in self.transforms:
             with self.subTest(transform=transform):
