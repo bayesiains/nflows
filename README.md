@@ -32,6 +32,18 @@ base_distribution = distributions.StandardNormal(shape=[2])
 flow = flows.Flow(transform=transform, distribution=base_distribution)
 ```
 
+or use already implemented flow architectures:
+
+```python
+from nflows.flows import MaskedAutoregressiveFlow, SimpleRealNVP
+
+features=2
+hidden_features=4
+
+maf = MaskedAutoregressiveFlow(features=features, hidden_features=hidden_features)
+rnvp = SimpleRealNVP(features=features, hidden_features=hidden_features)
+```
+
 To evaluate log probabilities of inputs:
 ```python
 log_prob = flow.log_prob(inputs)

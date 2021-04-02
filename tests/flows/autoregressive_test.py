@@ -30,13 +30,11 @@ class MaskedAutoregressiveFlowTest(torchtestcase.TorchTestCase):
         self.assertIsInstance(samples, torch.Tensor)
         self.assertEqual(samples.shape, torch.Size([num_samples, features]))
 
-
-class ConditionalMaskedAutoregressiveFlowTest(torchtestcase.TorchTestCase):
-    def test_log_prob(self):
+    def test_conditional_log_prob(self):
         batch_size = 10
         features = 20
         context_features = 5
-        flow = ar.ConditionalMaskedAutoregressiveFlow(
+        flow = ar.MaskedAutoregressiveFlow(
             features=features, hidden_features=30, context_features=context_features
         )
         inputs = torch.randn(batch_size, features)
@@ -45,13 +43,13 @@ class ConditionalMaskedAutoregressiveFlowTest(torchtestcase.TorchTestCase):
         self.assertIsInstance(log_prob, torch.Tensor)
         self.assertEqual(log_prob.shape, torch.Size([batch_size]))
 
-    def test_sample(self):
+    def test_conditional_sample(self):
         num_samples = 10
 
         batch_size = 10
         features = 20
         context_features = 5
-        flow = ar.ConditionalMaskedAutoregressiveFlow(
+        flow = ar.MaskedAutoregressiveFlow(
             features=features, hidden_features=30, context_features=context_features
         )
         context = torch.randn(batch_size, context_features)
