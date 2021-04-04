@@ -26,6 +26,5 @@ dependencies:
   - python
   - pytorch
   - pyyaml
-  - scikit-learn
   - tensorboard
   - tqdm
