@@ -42,6 +42,7 @@ hidden_features=4
 
 maf = MaskedAutoregressiveFlow(features=features, hidden_features=hidden_features)
 rnvp = SimpleRealNVP(features=features, hidden_features=hidden_features)
+nice = SimpleRealNVP(feautres=features, hidden_features=hidden_features, use_volumne_perserving=True)
 ```
 
 To evaluate log probabilities of inputs:
