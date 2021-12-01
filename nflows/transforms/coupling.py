@@ -213,7 +213,18 @@ class AffineCouplingTransform(CouplingTransform):
 
     Reference:
     > L. Dinh et al., Density estimation using Real NVP, ICLR 2017.
+
+    The scale is a neural network output transformed by the supplied `scale_activation`
+    then clamped to the interval `scale_min` to `scale_max`.
+    For backwards compatibility, the default `scale_activation` is sigmoid, producing a scale between 0 and 1.
+    In many applications this should be changed -- e.g. to softplus or exponential -- to permit scales above 1.
     """
+
+    def __init__(self, mask, transform_net_create_fn, unconditional_transform=None, scale_activation=torch.sigmoid, scale_min=1e-3, scale_max=3.):
+        self.scale_activation = scale_activation
+        self.scale_min = scale_min
+        self.scale_max = scale_max
+        super().__init__(mask, transform_net_create_fn, unconditional_transform)
 
     def _transform_dim_multiplier(self):
         return 2
@@ -221,8 +232,7 @@ class AffineCouplingTransform(CouplingTransform):
     def _scale_and_shift(self, transform_params):
         unconstrained_scale = transform_params[:, self.num_transform_features:, ...]
         shift = transform_params[:, : self.num_transform_features, ...]
-        # scale = (F.softplus(unconstrained_scale) + 1e-3).clamp(0, 3)
-        scale = torch.sigmoid(unconstrained_scale + 2) + 1e-3
+        scale = self.scale_activation(unconstrained_scale).clamp(self.scale_min, self.scale_max)
         return scale, shift
 
     def _coupling_transform_forward(self, inputs, transform_params):
