@@ -78,10 +78,10 @@ class LULinear(Linear):
         lower, upper = self._create_lower_upper()
         outputs = inputs - self.bias
         outputs = torch.linalg.solve_triangular(
-            outputs.t(), lower, upper=False, unitriangular=True
+            lower, outputs.t(), upper=False, unitriangular=True
         )
         outputs = torch.linalg.solve_triangular(
-            outputs, upper, upper=True, unitriangular=False
+            upper, outputs, upper=True, unitriangular=False
         )
         outputs = outputs.t()
 
@@ -108,10 +108,10 @@ class LULinear(Linear):
         lower, upper = self._create_lower_upper()
         identity = torch.eye(self.features, self.features)
         lower_inverse = torch.linalg.solve_triangular(
-            identity, lower, upper=False, unitriangular=True
+            lower, identity, upper=False, unitriangular=True
         )
         weight_inverse = torch.linalg.solve_triangular(
-            lower_inverse, upper, upper=True, unitriangular=False
+            upper, lower_inverse, upper=True, unitriangular=False
         )
         return weight_inverse
 
