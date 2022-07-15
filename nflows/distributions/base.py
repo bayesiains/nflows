@@ -49,8 +49,8 @@ class Distribution(nn.Module):
             num_samples: int, number of samples to generate.
             context: Tensor or None, conditioning variables. If None, the context is ignored. 
                      Should have shape [context_size, context_features], which will generate
-                     num_samples for each context provided with length = context_features. 
-                     The overall shape of the samples will then be [context_size, num_samples, features].
+                     num_samples for each context item provided. The overall shape of the samples 
+                     will then be [context_size, num_samples, features].
             batch_size: int or None, number of samples per batch. If None, all samples are generated
                 in one batch.
 
@@ -86,14 +86,16 @@ class Distribution(nn.Module):
 
         Args:
             num_samples: int, number of samples to generate.
-            context: Tensor or None, conditioning variables. If None, the context is ignored.
-
+            context: Tensor or None, conditioning variables. If None, the context is ignored. 
+                     Should have shape [context_size, context_features], which will generate
+                     num_samples for each context item provided. The overall shape of the samples 
+                     will then be [context_size, num_samples, features].
         Returns:
             A tuple of:
-                * A Tensor containing the samples, with shape [num_samples, ...] if context is None,
-                  or [context_size, num_samples, ...] if context is given.
+                * A Tensor containing the samples, with shape [num_samples, features] if context is None,
+                  or [context_size, num_samples, features] if context is given.
                 * A Tensor containing the log probabilities of the samples, with shape
-                  [num_samples, ...] if context is None, or [context_size, num_samples, ...] if
+                  [num_samples, features if context is None, or [context_size, num_samples, features] if
                   context is given.
         """
         samples = self.sample(num_samples, context=context)
