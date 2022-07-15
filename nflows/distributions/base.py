@@ -47,13 +47,16 @@ class Distribution(nn.Module):
 
         Args:
             num_samples: int, number of samples to generate.
-            context: Tensor or None, conditioning variables. If None, the context is ignored.
+            context: Tensor or None, conditioning variables. If None, the context is ignored. 
+                     Should have shape [num_samples_per_context, context_features], which will generate
+                     num_samples_per_context for each context provided of length = context_features. 
+                     The overall shape of the samples will then be [context_size, num_samples, features].
             batch_size: int or None, number of samples per batch. If None, all samples are generated
                 in one batch.
 
         Returns:
-            A Tensor containing the samples, with shape [num_samples, ...] if context is None, or
-            [context_size, num_samples, ...] if context is given.
+            A Tensor containing the samples, with shape [num_samples, features] if context is None, or
+            [context_size, num_samples, features] if context is given.
         """
         if not check.is_positive_int(num_samples):
             raise TypeError("Number of samples must be a positive integer.")
