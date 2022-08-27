@@ -75,7 +75,7 @@ class QRLinear(Linear):
         outputs, _ = self.orthogonal.inverse(
             outputs
         )  # Ignore logabsdet since we know it's zero.
-        outputs, _ = torch.triangular_solve(outputs.t(), upper, upper=True)
+        outputs = torch.linalg.solve_triangular(upper, outputs.t(), upper=True)
         outputs = outputs.t()
         logabsdet = -self.logabsdet()
         logabsdet = logabsdet * outputs.new_ones(outputs.shape[0])
@@ -101,7 +101,7 @@ class QRLinear(Linear):
         """
         upper = self._create_upper()
         identity = torch.eye(self.features, self.features)
-        upper_inv, _ = torch.triangular_solve(identity, upper, upper=True)
+        upper_inv = torch.linalg.solve_triangular(upper, identity, upper=True)
         weight_inv, _ = self.orthogonal(upper_inv)
         return weight_inv
 
