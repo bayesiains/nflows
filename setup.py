@@ -23,18 +23,7 @@ setup(
         "numpy",
         "tensorboard",
         "torch",
-        "tqdm",
+        "tqdm"
     ],
-    extras_requires={
-        "dev": [
-            "autoflake",
-            "black",
-            "flake8",
-            "isort",
-            "pytest",
-            "pyyaml",
-            "torchtestcase",
-        ],
-    },
     dependency_links=[],
 )

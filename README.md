@@ -46,14 +46,9 @@ Additional examples of the workflow are provided in [examples folder](examples/)
 
 ## Development
 
-You can install all the dependencies using the `environment.yml` file to create a conda environment: 
+To install all the dependencies for development:
 ```
-conda env create -f environment.yml
-```
-
-Alternatively, you can install via `setup.py` (the `dev` flag installs development and testing dependencies):
-```
-pip install -e ".[dev]"
+pip install -r requirements.txt
 ```
 
 ## Citing nflows
