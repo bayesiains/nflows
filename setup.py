@@ -1,7 +1,6 @@
 from os import path
 from setuptools import find_packages, setup
-
-exec(open("nflows/version.py").read())
+from nflows.version import VERSION
 
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
@@ -9,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name="nflows",
-    version=__version__,
+    version=VERSION,
     description="Normalizing flows in PyTorch.",
     long_description=long_description,
     long_description_content_type='text/markdown',
