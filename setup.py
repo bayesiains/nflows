@@ -22,7 +22,8 @@ setup(
         "numpy",
         "tensorboard",
         "torch",
-        "tqdm"
+        "tqdm",
+        "umnn"
     ],
     dependency_links=[],
 )
