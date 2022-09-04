@@ -1,4 +1,4 @@
-name: Build, lint and run tests for nflows
+name: Build, lint and run tests
 
 on: [push]
 
