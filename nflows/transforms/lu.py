@@ -106,7 +106,8 @@ class LULinear(Linear):
             D = num of features
         """
         lower, upper = self._create_lower_upper()
-        identity = torch.eye(self.features, self.features)
+        identity = torch.eye(
+            self.features, self.features, device=self.lower_entries.device)
         lower_inverse = torch.linalg.solve_triangular(
             lower, identity, upper=False, unitriangular=True
         )
