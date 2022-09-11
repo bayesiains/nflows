@@ -3,6 +3,7 @@ import warnings
 
 import numpy as np
 import torch
+from torch.nn.functional import softplus
 
 from nflows.transforms import splines
 from nflows.transforms.base import Transform
@@ -213,7 +214,19 @@ class AffineCouplingTransform(CouplingTransform):
 
     Reference:
     > L. Dinh et al., Density estimation using Real NVP, ICLR 2017.
+
+    The user should supply `scale_activation`, the final activation function in the neural network producing the scale tensor.
+    Two options are predefined in the class.
+    `DEFAULT_SCALE_ACTIVATION` preserves backwards compatibility but only produces scales <= 1.001.
+    `GENERAL_SCALE_ACTIVATION` produces scales <= 3, which is more useful in general applications.
     """
+
+    DEFAULT_SCALE_ACTIVATION = lambda x : torch.sigmoid(x + 2) + 1e-3
+    GENERAL_SCALE_ACTIVATION = lambda x : (softplus(x) + 1e-3).clamp(0, 3)
+
+    def __init__(self, mask, transform_net_create_fn, unconditional_transform=None, scale_activation=DEFAULT_SCALE_ACTIVATION):
+        self.scale_activation = scale_activation
+        super().__init__(mask, transform_net_create_fn, unconditional_transform)
 
     def _transform_dim_multiplier(self):
         return 2
@@ -221,8 +234,7 @@ class AffineCouplingTransform(CouplingTransform):
     def _scale_and_shift(self, transform_params):
         unconstrained_scale = transform_params[:, self.num_transform_features:, ...]
         shift = transform_params[:, : self.num_transform_features, ...]
-        # scale = (F.softplus(unconstrained_scale) + 1e-3).clamp(0, 3)
-        scale = torch.sigmoid(unconstrained_scale + 2) + 1e-3
+        scale = self.scale_activation(unconstrained_scale)
         return scale, shift
 
     def _coupling_transform_forward(self, inputs, transform_params):
