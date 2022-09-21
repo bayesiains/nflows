@@ -39,6 +39,8 @@ class LinearTest(TransformTest):
         self.transform.weight_inverse = MagicMock(return_value=inverse)
         self.transform.logabsdet = MagicMock(return_value=logabsdet)
 
+        self.eps = 1e-6
+
     def test_forward_default(self):
         outputs, logabsdet = self.transform(self.inputs)
 

@@ -6,6 +6,8 @@ import torch.nn
 from nflows.distributions.base import Distribution
 from nflows.utils import torchutils
 
+from inspect import signature
+
 
 class Flow(Distribution):
     """Base class for all flow objects."""
@@ -23,6 +25,9 @@ class Flow(Distribution):
         super().__init__()
         self._transform = transform
         self._distribution = distribution
+        distribution_signature = signature(self._distribution.log_prob)
+        distribution_arguments =  distribution_signature.parameters.keys()
+        self._context_used_in_base = 'context' in distribution_arguments
         if embedding_net is not None:
             assert isinstance(embedding_net, torch.nn.Module), (
                 "embedding_net is not a nn.Module. "
@@ -37,12 +42,22 @@ class Flow(Distribution):
     def _log_prob(self, inputs, context):
         embedded_context = self._embedding_net(context)
         noise, logabsdet = self._transform(inputs, context=embedded_context)
-        log_prob = self._distribution.log_prob(noise, context=embedded_context)
+        if self._context_used_in_base:
+            log_prob = self._distribution.log_prob(noise, context=embedded_context)
+        else:
+            log_prob = self._distribution.log_prob(noise)
         return log_prob + logabsdet
 
     def _sample(self, num_samples, context):
         embedded_context = self._embedding_net(context)
-        noise = self._distribution.sample(num_samples, context=embedded_context)
+        if self._context_used_in_base:
+            noise = self._distribution.sample(num_samples, context=embedded_context)
+        else:
+            repeat_noise = self._distribution.sample(num_samples*embedded_context.shape[0])
+            noise = torch.reshape(
+                    repeat_noise,
+                    (embedded_context.shape[0], -1, repeat_noise.shape[1])
+                    )
 
         if embedded_context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
@@ -65,9 +80,14 @@ class Flow(Distribution):
         For flows, this is more efficient that calling `sample` and `log_prob` separately.
         """
         embedded_context = self._embedding_net(context)
-        noise, log_prob = self._distribution.sample_and_log_prob(
-            num_samples, context=embedded_context
-        )
+        if self._context_used_in_base:
+            noise, log_prob = self._distribution.sample_and_log_prob(
+                num_samples, context=embedded_context
+            )
+        else:
+            noise, log_prob = self._distribution.sample_and_log_prob(
+                num_samples
+            )
 
         if embedded_context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
