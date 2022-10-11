@@ -30,15 +30,15 @@ class PointwiseAffineTransform(Transform):
         super().__init__()
         shift, scale = map(torch.as_tensor, (shift, scale))
 
-        if not (scale > 0.0).all():
-            raise ValueError("Scale must be strictly positive.")
+        if (scale == 0.0).any():
+            raise ValueError("Scale must be non-zero.")
 
         self.register_buffer("_shift", shift)
         self.register_buffer("_scale", scale)
 
     @property
     def _log_scale(self) -> Tensor:
-        return torch.log(self._scale)
+        return torch.log(torch.abs(self._scale))
 
     # XXX Memoize result on first run?
     def _batch_logabsdet(self, batch_shape: Iterable[int]) -> Tensor:
