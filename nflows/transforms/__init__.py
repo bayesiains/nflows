@@ -28,6 +28,7 @@ from nflows.transforms.linear import NaiveLinear
 from nflows.transforms.lu import LULinear
 from nflows.transforms.nonlinearities import (
     CompositeCDFTransform,
+    Exp,
     GatedLinearUnit,
     LeakyReLU,
     Logit,
