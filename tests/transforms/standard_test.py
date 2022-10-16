@@ -102,6 +102,13 @@ class AffineScalarTransformTest(TransformTest):
         test_case(2.0, 2.0)
         test_case(-1.0, None)
         test_case(-2.0, 2.0)
+        
+    def test_raises_value_error(self):    
+        def test_case(shift):
+            with self.assertRaises(ValueError):
+                transform = standard.AffineTransform(scale=0.0, shift=shift)
+            
+        test_case(None)
 
 
 if __name__ == "__main__":
