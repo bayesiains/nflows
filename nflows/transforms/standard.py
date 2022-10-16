@@ -44,11 +44,11 @@ class PointwiseAffineTransform(Transform):
     def _batch_logabsdet(self, batch_shape: Iterable[int]) -> Tensor:
         """Return log abs det with input batch shape."""
 
-        if self._log_scale.numel() > 1:
+        if self._log_abs_scale.numel() > 1:
             return self._log_abs_scale.expand(batch_shape).sum()
         else:
-            # When log_scale is a scalar, we use n*log_scale, which is more
-            # numerically accurate than \sum_1^n log_scale.
+            # When log_abs_scale is a scalar, we use n*log_abs_scale, which is more
+            # numerically accurate than \sum_1^n log_abs_scale.
             return self._log_abs_scale * torch.Size(batch_shape).numel()
 
     def forward(self, inputs: Tensor, context=Optional[Tensor]) -> Tuple[Tensor]:
