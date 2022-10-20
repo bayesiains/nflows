@@ -74,6 +74,7 @@ def rational_quadratic_spline(
     min_bin_width=DEFAULT_MIN_BIN_WIDTH,
     min_bin_height=DEFAULT_MIN_BIN_HEIGHT,
     min_derivative=DEFAULT_MIN_DERIVATIVE,
+    identity_init=False,
 ):
     if torch.min(inputs) < left or torch.max(inputs) > right:
         raise InputOutsideDomain()
@@ -94,7 +95,11 @@ def rational_quadratic_spline(
     cumwidths[..., -1] = right
     widths = cumwidths[..., 1:] - cumwidths[..., :-1]
 
-    derivatives = min_derivative + F.softplus(unnormalized_derivatives)
+    if identity_init: #flow is the identity if initialized with parameters equal to zero
+        beta = np.log(2) / (1 - min_derivative)
+    else: #backward compatibility
+        beta = 1
+    derivatives = min_derivative + F.softplus(unnormalized_derivatives, beta=beta)
 
     heights = F.softmax(unnormalized_heights, dim=-1)
     heights = min_bin_height + (1 - min_bin_height * num_bins) * heights
