@@ -41,7 +41,7 @@ class AutoregressiveTransform(Transform):
         return outputs, logabsdet
 
     def inverse(self, inputs, context=None):
-        num_inputs = np.prod(inputs.shape[1:])
+        num_inputs = int(np.prod(inputs.shape[1:]))
         outputs = torch.zeros_like(inputs)
         logabsdet = None
         for _ in range(num_inputs):

@@ -77,11 +77,11 @@ class LULinear(Linear):
         """
         lower, upper = self._create_lower_upper()
         outputs = inputs - self.bias
-        outputs, _ = torch.triangular_solve(
-            outputs.t(), lower, upper=False, unitriangular=True
+        outputs = torch.linalg.solve_triangular(
+            lower, outputs.t(), upper=False, unitriangular=True
         )
-        outputs, _ = torch.triangular_solve(
-            outputs, upper, upper=True, unitriangular=False
+        outputs = torch.linalg.solve_triangular(
+            upper, outputs, upper=True, unitriangular=False
         )
         outputs = outputs.t()
 
@@ -106,12 +106,13 @@ class LULinear(Linear):
             D = num of features
         """
         lower, upper = self._create_lower_upper()
-        identity = torch.eye(self.features, self.features)
-        lower_inverse, _ = torch.triangular_solve(
-            identity, lower, upper=False, unitriangular=True
+        identity = torch.eye(
+            self.features, self.features, device=self.lower_entries.device)
+        lower_inverse = torch.linalg.solve_triangular(
+            lower, identity, upper=False, unitriangular=True
         )
-        weight_inverse, _ = torch.triangular_solve(
-            lower_inverse, upper, upper=True, unitriangular=False
+        weight_inverse = torch.linalg.solve_triangular(
+            upper, lower_inverse, upper=True, unitriangular=False
         )
         return weight_inverse
 

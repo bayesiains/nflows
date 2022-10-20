@@ -1,6 +1,7 @@
 # nflows
 
 <a href="https://doi.org/10.5281/zenodo.4296287"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4296287.svg" alt="DOI"></a>
+<a href="https://github.com/bayesiains/nflows/actions/workflows/build_lint_test.yml"><img src="https://github.com/bayesiains/nflows/actions/workflows/build_lint_test.yml/badge.svg" alt="Build status"></a>
 
 `nflows` is a comprehensive collection of [normalizing flows](https://arxiv.org/abs/1912.02762) using [PyTorch](https://pytorch.org).
 
@@ -46,14 +47,9 @@ Additional examples of the workflow are provided in [examples folder](examples/)
 
 ## Development
 
-You can install all the dependencies using the `environment.yml` file to create a conda environment: 
+To install all the dependencies for development:
 ```
-conda env create -f environment.yml
-```
-
-Alternatively, you can install via `setup.py` (the `dev` flag installs development and testing dependencies):
-```
-pip install -e ".[dev]"
+pip install -r requirements.txt
 ```
 
 ## Citing nflows
