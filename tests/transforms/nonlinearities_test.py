@@ -10,6 +10,16 @@ from nflows.transforms.base import InputOutsideDomain
 from tests.transforms.transform_test import TransformTest
 
 
+class ExpTest(TransformTest):
+    def test_raises_domain_exception(self):
+        shape = [2, 3, 4]
+        transform = nl.Exp()
+        for value in [-1.0, 0.0]:
+            with self.assertRaises(InputOutsideDomain):
+                inputs = torch.full(shape, value)
+                transform.inverse(inputs)
+
+
 class TanhTest(TransformTest):
     def test_raises_domain_exception(self):
         shape = [2, 3, 4]
@@ -102,6 +112,7 @@ class NonlinearitiesTest(TransformTest):
         shape = [5, 10, 15]
         inputs = torch.rand(batch_size, *shape)
         transforms = [
+            nl.Exp(),
             nl.Tanh(),
             nl.LogTanh(),
             nl.LeakyReLU(),
@@ -120,6 +131,7 @@ class NonlinearitiesTest(TransformTest):
         shape = [5, 10, 15]
         inputs = torch.rand(batch_size, *shape)
         transforms = [
+            nl.Exp(),
             nl.Tanh(),
             nl.LogTanh(),
             nl.LeakyReLU(),
@@ -138,6 +150,7 @@ class NonlinearitiesTest(TransformTest):
         shape = [5, 10, 15]
         inputs = torch.rand(batch_size, *shape)
         transforms = [
+            nl.Exp(),
             nl.Tanh(),
             nl.LogTanh(),
             nl.LeakyReLU(),
