@@ -240,7 +240,7 @@ class PiecewiseCouplingTransformTest(TransformTest):
                 inputs = torch.rand(batch_size, *shape)
                 transform, mask = create_coupling_transform(cls, shape)
                 with self.subTest(cls=cls, shape=shape):
-                    self.eps = 1e-4  # TODO: can do better?
+                    self.eps = 1e-3
                     self.assert_forward_inverse_are_consistent(transform, inputs)
 
     def test_forward_inverse_are_consistent_unconstrained(self):
@@ -250,7 +250,7 @@ class PiecewiseCouplingTransformTest(TransformTest):
                 inputs = 3.0 * torch.randn(batch_size, *shape)
                 transform, mask = create_coupling_transform(cls, shape, tails="linear")
                 with self.subTest(cls=cls, shape=shape):
-                    self.eps = 1e-4  # TODO: can do better?
+                    self.eps = 1e-3
                     self.assert_forward_inverse_are_consistent(transform, inputs)
 
     def test_forward_unconditional(self):

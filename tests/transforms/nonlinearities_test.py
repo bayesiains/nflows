@@ -69,7 +69,7 @@ class TestPiecewiseCDF(TransformTest):
         for transform in self.transforms:
             with self.subTest(transform=transform):
                 inputs = torch.rand(self.batch_size, *self.shape)
-                self.eps = 1e-4
+                self.eps = 1e-3
                 self.assert_forward_inverse_are_consistent(transform, inputs)
 
 
@@ -87,7 +87,7 @@ class TestUnconstrainedPiecewiseCDF(TransformTest):
         for transform in transforms:
             with self.subTest(transform=transform):
                 inputs = 3 * torch.randn(batch_size, *shape)
-                self.eps = 1e-4
+                self.eps = 1e-3
                 self.assert_forward_inverse_are_consistent(transform, inputs)
 
 

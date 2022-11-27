@@ -20,7 +20,7 @@ class LinearSplineTest(torchtestcase.TorchTestCase):
         outputs, logabsdet = call_spline_fn(inputs, inverse=False)
         inputs_inv, logabsdet_inv = call_spline_fn(outputs, inverse=True)
 
-        self.eps = 1e-4
+        self.eps = 1e-3
         self.assertEqual(inputs, inputs_inv)
         self.assertEqual(logabsdet + logabsdet_inv, torch.zeros_like(logabsdet))
 
@@ -41,7 +41,7 @@ class UnconstrainedLinearSplineTest(torchtestcase.TorchTestCase):
         outputs, logabsdet = call_spline_fn(inputs, inverse=False)
         inputs_inv, logabsdet_inv = call_spline_fn(outputs, inverse=True)
 
-        self.eps = 1e-4
+        self.eps = 1e-3
         self.assertEqual(inputs, inputs_inv)
         self.assertEqual(logabsdet + logabsdet_inv, torch.zeros_like(logabsdet))
 
@@ -61,6 +61,6 @@ class UnconstrainedLinearSplineTest(torchtestcase.TorchTestCase):
         outputs, logabsdet = call_spline_fn(inputs, inverse=False)
         inputs_inv, logabsdet_inv = call_spline_fn(outputs, inverse=True)
 
-        self.eps = 1e-4
+        self.eps = 1e-3
         self.assertEqual(inputs, inputs_inv)
         self.assertEqual(logabsdet + logabsdet_inv, torch.zeros_like(logabsdet))
