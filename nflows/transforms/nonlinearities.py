@@ -16,22 +16,19 @@ from nflows.utils import torchutils
 
 
 class Exp(Transform):
-    
     def forward(self, inputs, context=None):
-        
         outputs = torch.exp(inputs)
-        logabsdet = torch.sum(inputs, dim=-1)
-        
+        logabsdet = torchutils.sum_except_batch(inputs, num_batch_dims=1)
+
         return outputs, logabsdet
     
     def inverse(self, inputs, context=None):
-        
         if torch.min(inputs) <= 0.:
             raise InputOutsideDomain()
-            
+
         outputs = torch.log(inputs)
-        logabsdet = -torch.sum(outputs, dim=-1)
-        
+        logabsdet = -torchutils.sum_except_batch(outputs, num_batch_dims=1)
+
         return outputs, logabsdet
 
 
