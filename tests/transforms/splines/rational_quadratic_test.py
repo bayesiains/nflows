@@ -45,7 +45,7 @@ class RationalQuadraticSplineTest(torchtestcase.TorchTestCase):
                 unnormalized_heights=unnormalized_heights,
                 unnormalized_derivatives=unnormalized_derivatives,
                 inverse=inverse,
-                allow_identity_init=True,
+                enable_identity_init=True,
             )
 
         inputs = torch.rand(*shape)
@@ -129,7 +129,7 @@ class UnconstrainedRationalQuadraticSplineTest(torchtestcase.TorchTestCase):
                 unnormalized_heights=unnormalized_heights,
                 unnormalized_derivatives=unnormalized_derivatives,
                 inverse=inverse,
-                allow_identity_init=True,
+                enable_identity_init=True,
             )
 
         inputs = torch.sign(torch.randn(*shape)) * (tail_bound + torch.rand(*shape))  # Now *all* inputs are outside [-tail_bound, tail_bound].
