@@ -30,26 +30,26 @@ class PointwiseAffineTransform(Transform):
         super().__init__()
         shift, scale = map(torch.as_tensor, (shift, scale))
 
-        if not (scale > 0.0).all():
-            raise ValueError("Scale must be strictly positive.")
+        if (scale == 0.0).any():
+            raise ValueError("Scale must be non-zero.")
 
         self.register_buffer("_shift", shift)
         self.register_buffer("_scale", scale)
 
     @property
-    def _log_scale(self) -> Tensor:
-        return torch.log(self._scale)
+    def _log_abs_scale(self) -> Tensor:
+        return torch.log(torch.abs(self._scale))
 
     # XXX Memoize result on first run?
     def _batch_logabsdet(self, batch_shape: Iterable[int]) -> Tensor:
         """Return log abs det with input batch shape."""
 
-        if self._log_scale.numel() > 1:
-            return self._log_scale.expand(batch_shape).sum()
+        if self._log_abs_scale.numel() > 1:
+            return self._log_abs_scale.expand(batch_shape).sum()
         else:
-            # When log_scale is a scalar, we use n*log_scale, which is more
-            # numerically accurate than \sum_1^n log_scale.
-            return self._log_scale * torch.Size(batch_shape).numel()
+            # When log_abs_scale is a scalar, we use n*log_abs_scale, which is more
+            # numerically accurate than \sum_1^n log_abs_scale.
+            return self._log_abs_scale * torch.Size(batch_shape).numel()
 
     def forward(self, inputs: Tensor, context=Optional[Tensor]) -> Tuple[Tensor]:
         batch_size, *batch_shape = inputs.size()
