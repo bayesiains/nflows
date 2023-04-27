@@ -1,6 +1,5 @@
 """Basic definitions for the flows module."""
 
-
 import torch.nn
 
 from nflows.distributions.base import Distribution
@@ -26,7 +25,7 @@ class Flow(Distribution):
         self._transform = transform
         self._distribution = distribution
         distribution_signature = signature(self._distribution.log_prob)
-        distribution_arguments =  distribution_signature.parameters.keys()
+        distribution_arguments = distribution_signature.parameters.keys()
         self._context_used_in_base = 'context' in distribution_arguments
         if embedding_net is not None:
             assert isinstance(embedding_net, torch.nn.Module), (
@@ -53,11 +52,11 @@ class Flow(Distribution):
         if self._context_used_in_base:
             noise = self._distribution.sample(num_samples, context=embedded_context)
         else:
-            repeat_noise = self._distribution.sample(num_samples*embedded_context.shape[0])
+            repeat_noise = self._distribution.sample(num_samples * embedded_context.shape[0])
             noise = torch.reshape(
-                    repeat_noise,
-                    (embedded_context.shape[0], -1, repeat_noise.shape[1])
-                    )
+                repeat_noise,
+                (embedded_context.shape[0], -1, repeat_noise.shape[1])
+            )
 
         if embedded_context is not None:
             # Merge the context dimension with sample dimension in order to apply the transform.
@@ -118,3 +117,19 @@ class Flow(Distribution):
         """
         noise, _ = self._transform(inputs, context=self._embedding_net(context))
         return noise
+
+    def transform_from_noise(self, noise, context=None):
+        """Transforms given noise to a data point
+
+        Args:
+            inputs: A `Tensor` of shape [batch_size, ...], the noise to be transformed.
+            context: A `Tensor` of shape [batch_size, ...] or None, optional context associated
+                with the data.
+
+        Returns:
+            A `Tensor` of shape [batch_size, ...], the data sample.
+        """
+
+        samples, _ = self.transform.inverse(noise, context=self._embedding_net(context))
+
+        return samples
