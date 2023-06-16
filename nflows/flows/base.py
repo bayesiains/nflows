@@ -130,6 +130,6 @@ class Flow(Distribution):
             A `Tensor` of shape [batch_size, ...], the data sample.
         """
 
-        samples, _ = self.transform.inverse(noise, context=self._embedding_net(context))
+        samples, _ = self._transform.inverse(noise, context=self._embedding_net(context))
 
         return samples
