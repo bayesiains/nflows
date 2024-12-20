@@ -3,14 +3,31 @@
 <a href="https://doi.org/10.5281/zenodo.4296287"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4296287.svg" alt="DOI"></a>
 <a href="https://github.com/bayesiains/nflows/actions/workflows/build_lint_test.yml"><img src="https://github.com/bayesiains/nflows/actions/workflows/build_lint_test.yml/badge.svg" alt="Build status"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg"></a>
+<a href="https://github.com/conda-forge/nflows-feedstock"><img src="https://img.shields.io/conda/vn/conda-forge/nflows.svg"></a>
 
 `nflows` is a comprehensive collection of [normalizing flows](https://arxiv.org/abs/1912.02762) using [PyTorch](https://pytorch.org).
 
 ## Installation
 
+### From PyPI
+
 To install from PyPI:
 ```
-pip install nflows
+python -m pip install nflows
+```
+
+### From conda-forge
+
+To install and add `nflows` to a project with [`pixi`](https://pixi.sh/), from the project directory run
+
+```
+pixi add nflows
+```
+
+and to install into a particular conda environment with [`conda`](https://docs.conda.io/projects/conda/), in the activated environment run
+
+```
+conda install --channel conda-forge nflows
 ```
 
 ## Usage
@@ -82,7 +99,7 @@ If you're using spline-based flows in particular, consider citing the _Neural Sp
 > [[arXiv]](https://arxiv.org/abs/1906.04032) [[bibtex]](https://papers.nips.cc/paper/2019/file/7ac71d433f282034e088473244df8c02-Bibtex.bib)
 
 
-`nflows` has been used in 
+`nflows` has been used in
 > Conor Durkan, Iain Murray, George Papamakarios, _On Contrastive Learning for Likelihood-free Inference_, ICML 2020.
 > [[arXiv]](https://arxiv.org/abs/2002.03712).
 
