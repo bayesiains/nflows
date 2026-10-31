@@ -126,6 +126,25 @@ class ConditionalDiagonalNormalTest(torchtestcase.TorchTestCase):
         self.assertFalse(torch.isnan(samples).any())
         self.assertFalse(torch.isinf(samples).any())
 
+    def test_sample_in_batches_with_context(self):
+        context_size = 3
+        input_shape = [2, 3]
+        means = torch.randn(context_size, *input_shape)
+        # Tiny standard deviations, so every sample is (almost) equal to its mean.
+        log_stds = torch.full((context_size, *input_shape), -20.0)
+        context = torch.cat([means, log_stds], dim=-1)
+        dist = normal.ConditionalDiagonalNormal(input_shape)
+        for num_samples, batch_size in [(6, 3), (6, 4), (5, 2)]:
+            with self.subTest(num_samples=num_samples, batch_size=batch_size):
+                samples = dist.sample(
+                    num_samples, context=context, batch_size=batch_size
+                )
+                self.assertEqual(
+                    samples.shape, torch.Size([context_size, num_samples] + input_shape)
+                )
+                expected = means[:, None, ...].expand_as(samples)
+                self.assertTrue(torch.allclose(samples, expected, atol=1e-6))
+
     def test_sample_and_log_prob_with_context(self):
         num_samples = 10
         context_size = 20

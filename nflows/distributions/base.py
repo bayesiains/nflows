@@ -78,7 +78,9 @@ class Distribution(nn.Module):
             samples = [self._sample(batch_size, context) for _ in range(num_batches)]
             if num_leftover > 0:
                 samples.append(self._sample(num_leftover, context))
-            return torch.cat(samples, dim=0)
+            # With a context, samples have shape [context_size, num_samples, ...], so
+            # batches must be joined along the sample dimension, not the context one.
+            return torch.cat(samples, dim=0 if context is None else 1)
 
     def _sample(self, num_samples, context):
         raise NotImplementedError()
